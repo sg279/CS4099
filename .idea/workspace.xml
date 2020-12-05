@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/ensemble.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/xception.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/preprocessing/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/preprocessing/ddsm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/preprocessing/mias.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/calc_case_description_test_set.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/calc_case_description_train_set.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mass_case_description_test_set.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mass_case_description_train_set.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/all-mias.tar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,10 +16,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
+            <state relative-caret-position="320">
               <caret line="213" column="17" selection-start-line="213" selection-start-column="7" selection-end-line="213" selection-end-column="17" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -52,7 +47,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/layers/pooling.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="229">
@@ -115,6 +110,21 @@
             <path>
               <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="preprocessing" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="trained_models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -231,7 +241,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603045177096</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="refactoring">
+      <created>1607184436553</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1607184436553</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -296,7 +313,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
-    <option name="LAST_COMMIT_MESSAGE" value="init" />
+    <MESSAGE value="refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -526,18 +544,6 @@
     <entry file="file://$PROJECT_DIR$/consistency_2_04-12-20/tuning_AUC.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="213" column="17" selection-start-line="213" selection-start-column="7" selection-end-line="213" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#1497#9102#0" />
-            <element signature="e#9143#10478#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/xception.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
@@ -552,6 +558,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
           <caret line="882" column="51" selection-start-line="882" selection-start-column="51" selection-end-line="882" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="213" column="17" selection-start-line="213" selection-start-column="7" selection-end-line="213" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1497#9102#0" />
+            <element signature="e#9143#10478#0" />
+          </folding>
         </state>
       </provider>
     </entry>
