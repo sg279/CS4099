@@ -1,0 +1,56 @@
+nb_classes = 2  # number of classes
+        based_model_last_block_layer_number = 126  # value is based on based model selected.
+        img_width, img_height = 300, 300  # change based on the shape/structure of your images
+        batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
+        nb_epoch = 50  # number of iteration the algorithm gets trained.
+        learn_rate = 1e-4  # sgd learning rate
+        momentum = .9  # sgd momentum to avoid local minimum
+        transformation_ratio = .05  # how aggressive will be the data augmentation/transformation
+        # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
+        base_model = Xception(input_shape=(img_width, img_height, 3), weights='imagenet', include_top=False)
+64/64 [==============================] - 1305s 20s/step - loss: 0.6134 - accuracy: 0.6639 - auc: 0.7225 - val_loss: 0.6790 - val_accuracy: 0.5886 - val_auc: 0.6297
+Epoch 10/50
+64/64 [==============================] - ETA: 0s - loss: 0.6111 - accuracy: 0.6550 - auc: 0.7200
+Epoch 00010: val_loss did not improve from 0.64557
+64/64 [==============================] - 1302s 20s/step - loss: 0.6111 - accuracy: 0.6550 - auc: 0.7200 - val_loss: 0.6724 - val_accuracy: 0.5840 - val_auc: 0.6299
+Confusion Matrix
+[[141 123]
+ [120 106]]
+Classification Report
+              precision    recall  f1-score   support
+
+           B       0.54      0.53      0.54       264
+           M       0.46      0.47      0.47       226
+
+    accuracy                           0.50       490
+   macro avg       0.50      0.50      0.50       490
+weighted avg       0.50      0.50      0.50       490
+
+
+Epoch 00019: val_auc did not improve from 0.70691
+64/64 [==============================] - 1272s 20s/step - loss: 0.5882 - accuracy: 0.6826 - auc: 0.7531 - val_loss: 0.6601 - val_accuracy: 0.6271 - val_auc: 0.6686
+Confusion Matrix
+[[163 101]
+ [136  90]]
+Classification Report
+              precision    recall  f1-score   support
+
+           B       0.55      0.62      0.58       264
+           M       0.47      0.40      0.43       226
+
+    accuracy                           0.52       490
+   macro avg       0.51      0.51      0.51       490
+weighted avg       0.51      0.52      0.51       490
+
+Confusion Matrix
+[[196  68]
+ [103 123]]
+Classification Report
+              precision    recall  f1-score   support
+
+           B       0.66      0.74      0.70       264
+           M       0.64      0.54      0.59       226
+
+    accuracy                           0.65       490
+   macro avg       0.65      0.64      0.64       490
+weighted avg       0.65      0.65      0.65       490
