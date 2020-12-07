@@ -18,6 +18,7 @@ import numpy as np
 from sklearn.utils import class_weight
 from models.xception import xception
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
+import random
 
 
 
@@ -202,8 +203,10 @@ def evaluate(model, tuning=False):
 
 
 def main():
-    tf.random.set_seed(7)
-    name = "consistency_2"
+    random.seed(10)
+    np.random.seed(10)
+    tf.random.set_seed(10)
+    name = "450"
     print(name)
     xm = xception(name)
     xm.make_generators("F:\\DDSM data\\pngs\\train", "F:\\DDSM data\\pngs\\val", "F:\\DDSM data\\pngs\\test")

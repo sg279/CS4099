@@ -25,7 +25,7 @@ class xception():
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 400, 400  # change based on the shape/structure of your images
+        self.img_width, self.img_height = 450, 450  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
@@ -36,13 +36,15 @@ class xception():
         else:
             self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
         # os.mkdir(".\\" + self.name)
-        self.model_path = ".\\" + self.name
+        self.model_path = ".\\trained_models\\" + self.name
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
         self.save_hyper_parameters()
+        np.random.seed(10)
+        tf.random.set_seed(7)
 
     def save_hyper_parameters(self):
         f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -57,7 +59,6 @@ class xception():
         f.close()
 
     def make_model(self, load=False):
-
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
         base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
 
