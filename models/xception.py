@@ -25,7 +25,7 @@ class xception():
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 450, 450  # change based on the shape/structure of your images
+        self.img_width, self.img_height = 700, 700  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
@@ -36,7 +36,8 @@ class xception():
         else:
             self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
         # os.mkdir(".\\" + self.name)
-        self.model_path = ".\\trained_models\\" + self.name
+        self.model_path = "./trained_models/" + self.name
+        self.model_path = os.path.join(os.getcwd(),".", "trained_models", self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
@@ -47,7 +48,8 @@ class xception():
         tf.random.set_seed(7)
 
     def save_hyper_parameters(self):
-        f = open(self.model_path+"/hyper_parameters.txt", 'w')
+        # f = open(self.model_path+"/hyper_parameters.txt", 'w')
+        f = open(os.path.join(self.model_path, "hyper_parameters.txt"), 'w')
         f.write("based_model_last_block_layer_number: "+str(self.based_model_last_block_layer_number)+"\n")
         f.write("img_width: " + str(self.img_width)+"\n")
         f.write("img_height: " + str(self.img_height)+"\n")
@@ -81,33 +83,37 @@ class xception():
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
         train_datagen = ImageDataGenerator(rescale=1. / 255,
-                                           # rotation_range=self.transformation_ratio,
-                                           # shear_range=self.transformation_ratio,
-                                           # zoom_range=self.transformation_ratio,
-                                           # cval=self.transformation_ratio,
-                                           # horizontal_flip=True,
-                                           # vertical_flip=True
+                                           rotation_range=self.transformation_ratio,
+                                           shear_range=self.transformation_ratio,
+                                           zoom_range=self.transformation_ratio,
+                                           cval=self.transformation_ratio,
+                                           horizontal_flip=True,
+                                           vertical_flip=True
                                            )
 
         validation_datagen = ImageDataGenerator(rescale=1. / 255,
-                                                # rotation_range=self.transformation_ratio,
-                                                # shear_range=self.transformation_ratio,
-                                                # zoom_range=self.transformation_ratio,
-                                                # cval=self.transformation_ratio,
-                                                # horizontal_flip=True,
-                                                # vertical_flip=True
+                                                rotation_range=self.transformation_ratio,
+                                                shear_range=self.transformation_ratio,
+                                                zoom_range=self.transformation_ratio,
+                                                cval=self.transformation_ratio,
+                                                horizontal_flip=True,
+                                                vertical_flip=True
                                                 )
 
         test_datagen = ImageDataGenerator(rescale=1. / 255)
         self.train_generator = train_datagen.flow_from_directory(train_data_dir,
                                                             target_size=(self.img_width, self.img_height),
                                                             batch_size=self.batch_size,
-                                                            class_mode='categorical',shuffle=False)
+                                                            class_mode='categorical'
+                                                            # ,shuffle=False
+                                                            )
 
         self.validation_generator = validation_datagen.flow_from_directory(validation_data_dir,
                                                                       target_size=(self.img_width, self.img_height),
                                                                       batch_size=self.batch_size,
-                                                                      class_mode='categorical',shuffle=False)
+                                                                      class_mode='categorical'
+                                                                    #   ,shuffle=False
+                                                                      )
 
         self.test_generator = test_datagen.flow_from_directory(test_data_dir,
                                                           target_size=(self.img_width, self.img_height),

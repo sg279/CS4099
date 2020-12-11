@@ -203,13 +203,15 @@ def evaluate(model, tuning=False):
 
 
 def main():
-    random.seed(10)
-    np.random.seed(10)
-    tf.random.set_seed(10)
-    name = "450"
+    # random.seed(10)
+    # np.random.seed(10)
+    # tf.random.set_seed(10)
+    name = "700"
     print(name)
     xm = xception(name)
-    xm.make_generators("F:\\DDSM data\\pngs\\train", "F:\\DDSM data\\pngs\\val", "F:\\DDSM data\\pngs\\test")
+    data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+    # xm.make_generators("F:\\DDSM data\\pngs\\train", "F:\\DDSM data\\pngs\\val", "F:\\DDSM data\\pngs\\test")
     # xm.predict(".\\", "F:\\DDSM data\\pngs\\test")
     # xm.doeverything(".\\")
     # xm.make_generators(".\mias\\train", ".\mias\\val", ".\mias\\test")
@@ -230,6 +232,8 @@ if __name__ == '__main__':
     # mias_conversion("val")
     # mias_conversion("train")
     # mias_conversion("test")
+    # print(os.getcwd())
+    # np.seterr(all='raise')
     main()
 
 
