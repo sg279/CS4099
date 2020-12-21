@@ -24,6 +24,7 @@ import random
 
 
 
+
 # hyper parameters for model
 nb_classes = 3  # number of classes
 based_model_last_block_layer_number = 126  # value is based on based model selected.
@@ -206,8 +207,8 @@ def main():
     # random.seed(10)
     # np.random.seed(10)
     # tf.random.set_seed(10)
-    name = "700"
-    print(name)
+    name = "750"
+    # print(name)
     xm = xception(name)
     data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
     xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
