@@ -241,17 +241,17 @@ if __name__ == '__main__':
     # ddsm_ensemble()
     # main_avg()
     transformation_ratio = .05
-    img_width, img_height = 650, 650  # change based on the shape/structure of your images
+    img_width, img_height = 800, 800  # change based on the shape/structure of your images
     batch_size = 32
     train_datagen = ImageDataGenerator(rescale=1. / 255)
-    train_generator = train_datagen.flow_from_directory("F:\\DDSM data\\pngs\\train",
+    train_generator = train_datagen.flow_from_directory(os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs", "test"),
                                                         target_size=(img_width, img_height),
                                                         batch_size=batch_size,
                                                         class_mode='categorical', shuffle=False)
     # main_voting()
-    filename = '../trained_models/650_12-12-20/650_12-12-20/'
+    filename = './trained_models/800_11-12-20/800_11-12-20/'
     # load model from file
     model = load_model(filename)
     pred_probas = model.predict(train_generator)
     predicts = np.argmax(pred_probas, axis=1)
-    np.save("./training_preds/model_650_preds", pred_probas)
+    np.save("./models/test_preds/model_800_preds", pred_probas)
