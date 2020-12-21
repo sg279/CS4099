@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/calc_case_description_test_set.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/calc_case_description_train_set.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mass_case_description_test_set.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mass_case_description_train_set.csv" afterDir="false" />
+    <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="removed randomness">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/xception.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xception.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,30 +14,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="213" column="17" selection-start-line="213" selection-start-column="7" selection-end-line="213" selection-end-column="17" />
+            <state relative-caret-position="903">
+              <caret line="208" column="14" selection-start-line="208" selection-start-column="14" selection-end-line="208" selection-end-column="14" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#1497#9102#0" />
-                <element signature="e#9143#10478#0" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/AUC.png">
-          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/xception.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="65" column="34" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="34" />
+            <state relative-caret-position="240">
+              <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -48,16 +39,27 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/layers/pooling.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="229">
-              <caret line="882" column="51" selection-start-line="882" selection-start-column="51" selection-end-line="882" selection-end-column="51" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/450_10-12-20/AUC.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/tuning_AUC.png">
+        <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/450_10-12-20/tuning_AUC.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/400_10-12-20/AUC.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/400_10-12-20/tuning_AUC.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trained_models/400_06-12-20/AUC.png">
           <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
@@ -86,8 +88,8 @@
         <option value="$PROJECT_DIR$/preprocessing/ddsm.py" />
         <option value="$PROJECT_DIR$/res.txt" />
         <option value="$PROJECT_DIR$/models/ensemble.py" />
-        <option value="$PROJECT_DIR$/models/xception.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/models/xception.py" />
       </list>
     </option>
   </component>
@@ -103,13 +105,22 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
             <path>
               <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="consistency_1_06-12-20" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="consistency_2_06-12-20" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -124,12 +135,25 @@
             <path>
               <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="trained_models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="trained_models_with_shuffle" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="trained_models_with_shuffle" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="400_10-12-20" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="trained_models_with_shuffle" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="450_10-12-20" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -248,7 +272,21 @@
       <option name="project" value="LOCAL" />
       <updated>1607184436553</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added ddsm csvs">
+      <created>1607187015916</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1607187015916</updated>
+    </task>
+    <task id="LOCAL-00006" summary="removed randomness">
+      <created>1607370215740</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1607370215740</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -262,13 +300,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24710222" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.29144096" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.29469123" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -314,7 +353,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
     <MESSAGE value="refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
+    <MESSAGE value="added ddsm csvs" />
+    <MESSAGE value="removed randomness" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed randomness" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -336,7 +377,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>179</line>
+          <line>180</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
@@ -392,63 +433,14 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/preprocessing/image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17240">
-          <caret line="867" column="6" selection-start-line="867" selection-start-column="6" selection-end-line="867" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/24-11-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/24-11-20hyper_parameters.txt" />
-    <entry file="file://$PROJECT_DIR$/450_28-11-20/450_28-11-20log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/24-11-20/Figure_1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/450_28-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/24-11-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/24-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/600_no_shuffle_29-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/550_no_shuffle_30-11-20/AUC.png" />
-    <entry file="file://$PROJECT_DIR$/550_no_shuffle_30-11-20/hyper_parameters.txt" />
     <entry file="file://$PROJECT_DIR$/550_no_shuffle_30-11-20/tuning_AUC.png" />
-    <entry file="file://$PROJECT_DIR$/400_no_shuffle_30-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/400_no_shuffle_30-11-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" column="13" lean-forward="true" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/600_no_shuffle_29-11-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/400_no_shuffle_30-11-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/400_no_shuffle_30-11-20/hyper_parameters.txt" />
+    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/hyper_parameters.txt" />
+    <entry file="file://$PROJECT_DIR$/600_no_shuffle_29-11-20/hyper_parameters.txt" />
+    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/results.txt" />
+    <entry file="file://$PROJECT_DIR$/450_no_shuffle_01-12-20/AUC.png" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -462,98 +454,32 @@
     <entry file="file://$PROJECT_DIR$/500_28-11-20/AUC.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="115" selection-start-line="9" selection-start-column="115" selection-end-line="9" selection-end-column="115" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_02-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_30-11-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_30-11-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_02-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/400_no_shuffle_04-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/400_no_shuffle_04-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/consistency_2_04-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/consistency_1_04-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/consistency_1_04-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/consistency_2_04-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/xception.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="65" column="34" selection-start-line="65" selection-start-column="12" selection-end-line="65" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/hyper_parameters.txt" />
+    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/600_no_shuffle_29-11-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/hyper_parameters.txt" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_02-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_03-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_30-11-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/450_no_shuffle_01-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_30-11-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/trained_models/400_no_shuffle_03-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/500_no_shuffle_02-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/trained_models/550_no_shuffle_02-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/400_no_shuffle_04-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/400_no_shuffle_04-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_2_04-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_1_04-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_1_04-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_2_04-12-20/tuning_AUC.png" />
     <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/layers/pooling.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
@@ -561,17 +487,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/consistency_2_05-12-20/tuning_AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_2_05-12-20/AUC.png" />
+    <entry file="file://$PROJECT_DIR$/consistency_2_05-12-20/log.csv" />
+    <entry file="file://$PROJECT_DIR$/consistency_1_06-12-20/log.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/consistency_2_06-12-20/log.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/400_06-12-20/tuning_AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/400_06-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="213" column="17" selection-start-line="213" selection-start-column="7" selection-end-line="213" selection-end-column="17" />
+        <state relative-caret-position="903">
+          <caret line="208" column="14" selection-start-line="208" selection-start-column="14" selection-end-line="208" selection-end-column="14" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#1497#9102#0" />
-            <element signature="e#9143#10478#0" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/xception.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/450_10-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/450_10-12-20/tuning_AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/400_10-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_with_shuffle/400_10-12-20/tuning_AUC.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
   </component>
 </project>
