@@ -185,9 +185,11 @@ def evaluate(model, tuning=False):
     target_names = ['B', 'M']
     print(classification_report(model.test_generator.classes, y_pred, target_names=target_names))
     f.write(classification_report(model.test_generator.classes, y_pred, target_names=target_names)+"\n")
-    f.close()
+    
     fpr, tpr, _ = roc_curve(model.test_generator.classes, y_pred)
     roc_auc = auc(fpr, tpr)
+    f.write("FPR: "+str(fpr)+ " TPR: "+str(tpr)+ " AUC: "+str(roc_auc)+"\n")
+    f.close()
     plt.figure()
     lw = 2
     plt.plot(fpr, tpr, color='darkorange',
@@ -204,10 +206,10 @@ def evaluate(model, tuning=False):
 
 
 def main():
-    # random.seed(10)
-    # np.random.seed(10)
-    # tf.random.set_seed(10)
-    name = "750"
+    random.seed(4099)
+    np.random.seed(4099)
+    tf.random.set_seed(4099)
+    name = "400"
     # print(name)
     xm = xception(name)
     data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
@@ -220,8 +222,10 @@ def main():
     xm.make_model(False)
     xm.train()
     evaluate(xm)
-    xm.tune()
-    evaluate(xm, True)
+    xm.save_preds("")
+    # xm.tune()
+    # evaluate(xm, True)
+    # xm.save_preds("_tuning")
     # xm.make_generators(".\mias\\train", ".\mias\\val",".\mias\\test")
     # xm.train()
     # xm.test()

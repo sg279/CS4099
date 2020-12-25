@@ -25,27 +25,27 @@ class xception():
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 750, 750  # change based on the shape/structure of your images
+        self.img_width, self.img_height = 200, 200  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
-        self.nb_epoch = 50  # number of iteration the algorithm gets trained.
+        self.nb_epoch = 1  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
         self.transformation_ratio = .05
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
-            self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
+            # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
+            self.name = model_name
         # os.mkdir(".\\" + self.name)
         self.model_path = "./trained_models/" + self.name
-        self.model_path = os.path.join(os.getcwd(),".", "trained_models", self.name)
+        self.model_path = os.path.join(os.getcwd(),".", "trained_models_seeded", self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
         self.save_hyper_parameters()
-        np.random.seed(10)
-        tf.random.set_seed(7)
+        
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -82,6 +82,7 @@ class xception():
         self.model = model
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
+        self.train_data_dir, self.validation_data_dir, self.test_data_dir = train_data_dir, validation_data_dir, test_data_dir
         train_datagen = ImageDataGenerator(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
                                            shear_range=self.transformation_ratio,
@@ -171,6 +172,7 @@ class xception():
         # fine-tune the model
         self.model.fit(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch, callbacks=callbacks_list,
                   class_weight=self.class_weights)
+        self.model.save(self.model_path+"/"+self.name+"_tuned")
 
     def test(self):
         Y_pred = self.model.predict(self.test_generator, self.test_generator.samples // self.batch_size + 1)
@@ -180,8 +182,6 @@ class xception():
         print('Classification Report')
         target_names = ['B', 'M', 'N']
         print(classification_report(self.test_generator.classes, y_pred, target_names=target_names))
-
-
 
     def doeverything(self, model_path):
         # hyper parameters for model
@@ -285,3 +285,43 @@ class xception():
 
     def test_predict(self):
         return self.model.predict(self.test_generator)
+    
+    def save_preds(self, tuning):
+
+        train_datagen = ImageDataGenerator(rescale=1. / 255
+                                           )
+
+        validation_datagen = ImageDataGenerator(rescale=1. / 255
+                                                )
+
+        test_datagen = ImageDataGenerator(rescale=1. / 255)
+        train_generator = train_datagen.flow_from_directory(self.train_data_dir,
+                                                            target_size=(self.img_width, self.img_height),
+                                                            batch_size=self.batch_size,
+                                                            class_mode='categorical'
+                                                            ,shuffle=False
+                                                            )
+
+        validation_generator = validation_datagen.flow_from_directory(self.validation_data_dir,
+                                                                      target_size=(self.img_width, self.img_height),
+                                                                      batch_size=self.batch_size,
+                                                                      class_mode='categorical'
+                                                                      ,shuffle=False
+                                                                      )
+
+        test_generator = test_datagen.flow_from_directory(self.test_data_dir,
+                                                          target_size=(self.img_width, self.img_height),
+                                                          batch_size=self.batch_size,
+                                                          class_mode='categorical',shuffle=False)
+        os.makedirs(os.path.join(self.model_path,"training_preds"), exist_ok=True)
+        os.makedirs(os.path.join(self.model_path,"validation_preds"), exist_ok=True)
+        os.makedirs(os.path.join(self.model_path,"test_preds"), exist_ok=True)
+        pred_probas = self.model.predict(train_generator)
+        predicts = np.argmax(pred_probas, axis=1)
+        np.save(os.path.join(self.model_path,"training_preds",self.name+tuning), pred_probas)
+        pred_probas = self.model.predict(validation_generator)
+        predicts = np.argmax(pred_probas, axis=1)
+        np.save(os.path.join(self.model_path,"validation_preds",self.name+tuning), pred_probas)
+        pred_probas = self.model.predict(test_generator)
+        predicts = np.argmax(pred_probas, axis=1)
+        np.save(os.path.join(self.model_path,"test_preds",self.name+tuning), pred_probas)
