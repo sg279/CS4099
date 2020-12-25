@@ -25,9 +25,9 @@ class xception():
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 200, 200  # change based on the shape/structure of your images
+        self.img_width, self.img_height = 750, 750  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
-        self.nb_epoch = 1  # number of iteration the algorithm gets trained.
+        self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
         self.transformation_ratio = .05
@@ -45,7 +45,8 @@ class xception():
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
         self.save_hyper_parameters()
-        
+        np.random.seed(10)
+        tf.random.set_seed(7)
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -125,6 +126,7 @@ class xception():
                                                                          classes=np.unique(
                                                                              self.train_generator.classes),
                                                                          y=self.train_generator.classes)))
+        self.test_classes = self.test_generator.classes
 
     def train(self):
 
@@ -285,7 +287,7 @@ class xception():
 
     def test_predict(self):
         return self.model.predict(self.test_generator)
-    
+
     def save_preds(self, tuning):
 
         train_datagen = ImageDataGenerator(rescale=1. / 255

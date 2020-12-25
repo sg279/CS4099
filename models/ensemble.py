@@ -18,6 +18,9 @@ import numpy as np
 from sklearn.utils import class_weight
 from tensorflow.keras.regularizers import L1L2
 from tensorflow import one_hot
+from matplotlib import pyplot as plt
+from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
+
 
 # load models from file
 def load_all_models(n_models):
@@ -241,17 +244,32 @@ if __name__ == '__main__':
     # ddsm_ensemble()
     # main_avg()
     transformation_ratio = .05
-    img_width, img_height = 800, 800  # change based on the shape/structure of your images
+    img_width, img_height = 450, 450  # change based on the shape/structure of your images
     batch_size = 32
     train_datagen = ImageDataGenerator(rescale=1. / 255)
-    train_generator = train_datagen.flow_from_directory(os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs", "test"),
+    train_generator = train_datagen.flow_from_directory("F:\\DDSM data\\pngs\\test",
                                                         target_size=(img_width, img_height),
                                                         batch_size=batch_size,
                                                         class_mode='categorical', shuffle=False)
     # main_voting()
-    filename = './trained_models/800_11-12-20/800_11-12-20/'
+    filename = '../trained_models/trained_models/450_12-12-20/450_12-12-20/'
     # load model from file
     model = load_model(filename)
     pred_probas = model.predict(train_generator)
+
+    fpr, tpr, _ = roc_curve(train_generator.classes, np.argmax(pred_probas, axis=1))
+    roc_auc = auc(fpr, tpr)
+    plt.figure()
+    lw = 2
+    plt.plot(fpr, tpr, color='darkorange',
+             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver operating characteristic example')
+    plt.legend(loc="lower right")
     predicts = np.argmax(pred_probas, axis=1)
-    np.save("./models/test_preds/model_800_preds", pred_probas)
+    plt.show()
+    # np.save("./models/test_preds/model_800_preds", pred_probas)

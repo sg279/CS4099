@@ -10,13 +10,16 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
 from tensorflow.keras.applications import *
 from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator,  array_to_img, img_to_array, load_img
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras import backend as k
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.utils import class_weight
 from models.xception import xception
+from models.lr_ensemble import LrEnsemble
+from models.average_ensemble import AverageEnsemble
+from models.voting_ensemble import VotingEnsemble
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import random
 
@@ -175,18 +178,18 @@ def evaluate(model, tuning=False):
     if tuning:
         tuning_string = "tuning_"
     print('Confusion Matrix')
-    print(confusion_matrix(model.test_generator.classes, y_pred))
+    print(confusion_matrix(model.test_classes, y_pred))
     print('Classification Report')
     f = open(model.model_path + "/"+tuning_string+"results.txt", 'w')
     f.write('Confusion Matrix\n')
-    f.write(str(confusion_matrix(model.test_generator.classes, y_pred))+"\n")
+    f.write(str(confusion_matrix(model.test_classes, y_pred))+"\n")
     f.write('Classification Report\n')
 
     target_names = ['B', 'M']
-    print(classification_report(model.test_generator.classes, y_pred, target_names=target_names))
-    f.write(classification_report(model.test_generator.classes, y_pred, target_names=target_names)+"\n")
-    
-    fpr, tpr, _ = roc_curve(model.test_generator.classes, y_pred)
+    print(classification_report(model.test_classes, y_pred, target_names=target_names))
+    f.write(classification_report(model.test_classes, y_pred, target_names=target_names)+"\n")
+
+    fpr, tpr, _ = roc_curve(model.test_classes, y_pred)
     roc_auc = auc(fpr, tpr)
     f.write("FPR: "+str(fpr)+ " TPR: "+str(tpr)+ " AUC: "+str(roc_auc)+"\n")
     f.close()
@@ -230,7 +233,42 @@ def main():
     # xm.train()
     # xm.test()
     # xm.tune()
-    # xm.test()
+    # evaluate(xm, True)
+
+    # name = "average"
+    # avg = AverageEnsemble(name)
+    # evaluate(avg)
+    # name = "voting"
+    # voting = VotingEnsemble(name)
+    # evaluate(voting)
+    # name = "LR"
+    # lr = LrEnsemble(name, nodes=0)
+    # lr.make_model()
+    # lr.train()
+    # evaluate(lr)
+
+    # for i in range(10, 100, 10):
+    #     name = "LR_"+str(i)
+    #     lr = LrEnsemble(name, nodes=i)
+    #     lr.make_model()
+    #     lr.train()
+    #     evaluate(lr)
+
+    # datagen = ImageDataGenerator(shear_range=20
+    #                                         )
+    #
+    # img = load_img('F:\\DDSM data\\pngs\\val\\B\\Calc-Test_P_00077_RIGHT_MLO.png')  # this is a PIL image
+    # # x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
+    # # x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
+    #
+    # # the .flow() command below generates batches of randomly transformed images
+    # # and saves the results to the `preview/` directory
+    # i = 0
+    # for batch in datagen.flow_from_directory("F:\\DDSM data\\pngs\\preview2", batch_size=1, color_mode='grayscale',
+    #                           save_to_dir='F:\\DDSM data\\pngs\\preview', save_prefix='shear', save_format='jpg', target_size=(800,800)):
+    #     i += 1
+    #     if i > 0:
+    #         break  #
 
 
 if __name__ == '__main__':

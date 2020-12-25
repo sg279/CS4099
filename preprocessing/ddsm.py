@@ -25,7 +25,7 @@ def ddsm_conversion(mode):
     data["pathology"].replace(["BENIGN","BENIGN_WITHOUT_CALLBACK" ], "B", inplace=True)
     m = data.loc[data["pathology"] == "M"]
     b = data.loc[data["pathology"] == "B"]
-    path = "F:\\DDSM data\\pngs\\"
+    path = "F:\\DDSM data\\pngs_balanced\\"
     source_path = "F:\DDSM data\CBIS-DDSM"
     os.makedirs(path + "\\" + mode + "\\M", exist_ok=True)
     os.makedirs(path + "\\" + mode + "\\B", exist_ok=True)
