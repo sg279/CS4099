@@ -252,7 +252,7 @@ if __name__ == '__main__':
                                                         batch_size=batch_size,
                                                         class_mode='categorical', shuffle=False)
     # main_voting()
-    filename = '../trained_models/trained_models/450_12-12-20/450_12-12-20/'
+    filename = '../resolution_gridsearch/resolution_gridsearch/450_12-12-20/450_12-12-20/'
     # load model from file
     model = load_model(filename)
     pred_probas = model.predict(train_generator)

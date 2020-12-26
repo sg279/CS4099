@@ -2,15 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="removed randomness">
-      <change afterPath="$PROJECT_DIR$/models/average_ensemble.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/lr_ensemble.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/nn_ensemble.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/voting_ensemble.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/average_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/average_ensemble.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/ensemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/lr_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/lr_ensemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/nn_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/nn_ensemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/voting_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/voting_ensemble.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/xception.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/xception.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/preprocessing/ddsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/preprocessing/ddsm.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/400_10-12-20/saved_model.pb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/400_10-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/400_10-12-20/variables/variables.index" beforeDir="false" />
@@ -21,6 +20,16 @@
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/top_model_weights.h5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/tuning_log.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/400_10-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/450_12-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/450_12-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/450_12-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/450_12-12-20/tuning_results.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/500_10-12-20/saved_model.pb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/500_10-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/500_10-12-20/variables/variables.index" beforeDir="false" />
@@ -31,6 +40,16 @@
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/top_model_weights.h5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/tuning_log.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/500_10-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/550_12-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/550_12-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/550_12-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/550_12-12-20/tuning_results.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/600_11-12-20/saved_model.pb" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/600_11-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/600_11-12-20/variables/variables.index" beforeDir="false" />
@@ -41,6 +60,46 @@
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/top_model_weights.h5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/tuning_log.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/trained_models/600_11-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/650_12-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/650_12-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/650_12-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/650_12-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/700_11-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/700_11-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/700_11-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/700_11-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/750_13-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/750_13-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/750_13-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/750_13-12-20/tuning_results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/800_11-12-20/saved_model.pb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/800_11-12-20/variables/variables.data-00000-of-00001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/800_11-12-20/variables/variables.index" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/hyper_parameters.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/results.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/top_model_weights.h5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/tuning_log.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trained_models/800_11-12-20/tuning_results.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,62 +110,43 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/lr_ensemble.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-              <folding>
-                <element signature="e#65#92#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/log.csv">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/preprocessing/mias.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/xception.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="63" column="8" selection-start-line="63" selection-start-column="8" selection-end-line="63" selection-end-column="8" />
+            <state relative-caret-position="180">
+              <caret line="102" column="42" selection-start-line="102" selection-start-column="24" selection-end-line="102" selection-end-column="42" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#16458#19016#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/nn_ensemble.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/preprocessing/image.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2250">
+              <caret line="752" column="6" selection-start-line="752" selection-start-column="6" selection-end-line="752" selection-end-column="6" />
+              <folding>
+                <element signature="e#32950#35188#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/trained_models/3_trainable_base/log.csv">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
+            <state relative-caret-position="283">
+              <caret line="67" column="33" selection-start-line="67" selection-start-column="33" selection-end-line="67" selection-end-column="33" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#1099#2470#0" />
               </folding>
             </state>
           </provider>
@@ -139,12 +179,13 @@
         <option value="$PROJECT_DIR$/preprocessing/mias.py" />
         <option value="$PROJECT_DIR$/res.txt" />
         <option value="$PROJECT_DIR$/models/ensemble.py" />
-        <option value="$PROJECT_DIR$/models/average_ensemble.py" />
-        <option value="$PROJECT_DIR$/models/voting_ensemble.py" />
         <option value="$PROJECT_DIR$/preprocessing/ddsm.py" />
-        <option value="$PROJECT_DIR$/models/xception.py" />
         <option value="$PROJECT_DIR$/models/nn_ensemble.py" />
+        <option value="$PROJECT_DIR$/models/voting_ensemble.py" />
+        <option value="$PROJECT_DIR$/models/average_ensemble.py" />
         <option value="$PROJECT_DIR$/models/lr_ensemble.py" />
+        <option value="$PROJECT_DIR$/log.csv" />
+        <option value="$PROJECT_DIR$/models/xception.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -178,6 +219,17 @@
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="preprocessing" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="trained_models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="trained_models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="3_trainable_base" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -191,17 +243,18 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\CS4099\trained_models" />
       <recent name="E:\CS4099" />
       <recent name="E:\CS4099\models\classes" />
       <recent name="E:\CS4099\models\training_preds" />
       <recent name="E:\CS4099\models\trained" />
-      <recent name="E:\CS4099\models" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\CS4099\models\test_preds" />
+      <recent name="E:\CS4099\resolution_gridsearch\750" />
       <recent name="E:\CS4099\models" />
       <recent name="E:\CS4099" />
       <recent name="E:\CS4099\models\trained" />
-      <recent name="E:\Users\Sam\Anaconda3\envs\iq-py-playground\Lib\site-packages\google" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -344,12 +397,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.average_ensemble" />
+      <item itemvalue="Python.main" />
       <item itemvalue="Python.ddsm" />
       <item itemvalue="Python.ensemble" />
-      <item itemvalue="Python.lr_ensemble" />
-      <item itemvalue="Python.main" />
       <item itemvalue="Python.voting_ensemble" />
+      <item itemvalue="Python.average_ensemble" />
+      <item itemvalue="Python.lr_ensemble" />
     </list>
     <recent_temporary>
       <list>
@@ -420,7 +473,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608567891430</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added ensembles">
+      <created>1608920658295</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1608920658295</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -440,7 +500,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.29469123" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4171181" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -491,7 +551,8 @@
     <MESSAGE value="removed randomness" />
     <MESSAGE value="ensemble additions" />
     <MESSAGE value="ensemble updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="ensemble updates" />
+    <MESSAGE value="Added ensembles" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ensembles" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -513,12 +574,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>181</line>
+          <line>34</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>22</line>
+          <line>23</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -563,12 +624,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/lr_ensemble.py</url>
-          <line>128</line>
+          <line>130</line>
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/lr_ensemble.py</url>
-          <line>99</line>
+          <line>101</line>
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -578,7 +639,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>175</line>
+          <line>28</line>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -639,112 +700,8 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/500_10-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/550_12-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/550_12-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/600_11-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/650_12-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/650_12-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/700_11-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/700_11-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/750_13-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/750_13-12-20/tuning_AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/numpy/core/fromnumeric.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="69" selection-start-line="69" selection-end-line="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/layers/core.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="1130" column="6" selection-start-line="1130" selection-start-column="6" selection-end-line="1130" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/ensemble.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="245" column="30" selection-start-line="245" selection-start-column="30" selection-end-line="245" selection-end-column="30" />
-          <folding>
-            <element signature="e#66#78#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/average_23-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/average_ensemble.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
-          <folding>
-            <element signature="e#65#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/lr_200_epochs_23-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/voting_23-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/average_23-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/800_11-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/750_13-12-20/tuning_results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/750_13-12-20/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/800_11-12-20/tuning_results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/voting_23-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/lr_200_epochs_23-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/trained_models/LR_no_class_weights_23-12-20/AUC.png">
       <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/voting_ensemble.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-          <folding>
-            <element signature="e#65#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_20_23-12-20/AUC.png">
       <provider selected="true" editor-type-id="images" />
@@ -770,13 +727,6 @@
     <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_90_24-12-20/AUC.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/preprocessing/image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="898" column="74" selection-start-line="898" selection-start-column="74" selection-end-line="898" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/preprocessing/ddsm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -787,16 +737,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/750_13-12-20/log.csv">
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750_13-12-20/log.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/650_12-12-20/log.csv">
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/650_12-12-20/log.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/trained_models/500_10-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_25-12-20/results.txt">
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/500_10-12-20/log.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_10_23-12-20/results.txt">
@@ -808,6 +755,64 @@
     <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_25-12-20/AUC.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/train_more_layers_25-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/train_more_layers_25-12-20/log.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lr_gridsearch/LR_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/LR2_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/average_ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="28" column="72" selection-start-line="28" selection-start-column="72" selection-end-line="28" selection-end-column="72" />
+          <folding>
+            <element signature="e#65#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/nn_ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="26" column="63" selection-start-line="26" selection-start-column="63" selection-end-line="26" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/voting_25-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/voting_ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="27" column="72" selection-start-line="27" selection-start-column="72" selection-end-line="27" selection-end-column="72" />
+          <folding>
+            <element signature="e#65#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-111">
+          <caret line="245" column="30" selection-start-line="245" selection-start-column="30" selection-end-line="245" selection-end-column="30" />
+          <folding>
+            <element signature="e#66#78#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/test_preds/model_750_preds.npy">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/test_preds/750.npy">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/preprocessing/mias.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
@@ -818,48 +823,117 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/train_more_layers_25-12-20/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trained_models/train_more_layers_25-12-20/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/nn_ensemble.py">
+    <entry file="file://$PROJECT_DIR$/trained_models/750_13-12-20/results.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+        <state>
+          <caret column="16" lean-forward="true" selection-start-column="16" selection-end-column="16" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750_13-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750_13-12-20/tuning_AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750_13-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750_13-12-20/tuning_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/750_13-12-20/tuning_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750/results_test.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resolution_gridsearch/750/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/best_performing_25-12-20/AUC.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/models/lr_ensemble.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="33" column="13" lean-forward="true" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        <state relative-caret-position="140">
+          <caret line="22" column="84" selection-start-line="22" selection-start-column="84" selection-end-line="22" selection-end-column="84" />
           <folding>
             <element signature="e#65#92#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/xception.py">
+    <entry file="file://$PROJECT_DIR$/trained_models/best_performing_25-12-20/results_test.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/best_performing_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/average_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/voting_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/NN_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/LR_25-12-20/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/layers/pooling.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="63" column="8" selection-start-line="63" selection-start-column="8" selection-end-line="63" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="179">
+          <caret line="869" column="6" selection-start-line="869" selection-start-column="6" selection-end-line="869" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/new_block/log.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models/3_trainable_base/log.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" selection-start-column="19" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="271" lean-forward="true" selection-start-line="271" selection-end-line="271" />
+        <state relative-caret-position="283">
+          <caret line="67" column="33" selection-start-line="67" selection-start-column="33" selection-end-line="67" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1099#2470#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/xception.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="102" column="42" selection-start-line="102" selection-start-column="24" selection-end-line="102" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#16458#19016#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/keras/preprocessing/image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2250">
+          <caret line="752" column="6" selection-start-line="752" selection-start-column="6" selection-end-line="752" selection-end-column="6" />
+          <folding>
+            <element signature="e#32950#35188#0" />
           </folding>
         </state>
       </provider>

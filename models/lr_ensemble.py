@@ -67,13 +67,15 @@ class LrEnsemble():
         callbacks_list = [
             EarlyStopping(monitor='val_auc', patience=30, verbose=0, restore_best_weights=True, mode="max")
         ]
-        self.model.fit(self.training_preds, self.training_classes, epochs=200, validation_data=(self.val_preds, self.val_classes), verbose=0,
+        self.model.fit(self.training_preds, self.training_classes, epochs=200, validation_data=(self.val_preds, self.val_classes), verbose=1,
                   class_weight=class_weights,
                        callbacks=callbacks_list)
         self.model.save(self.model_path + "/" + self.name)
 
     def test_predict(self):
-        return to_categorical(self.model.predict(self.test_preds).round())
+        # return to_categorical(self.model.predict(self.test_preds).round())
+
+        return to_categorical(self.test_preds.round())
 
 
 def lr_ensemble():

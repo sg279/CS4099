@@ -24,7 +24,7 @@ class VotingEnsemble:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name + "_" + datetime.datetime.now().strftime('%d-%m-%y')
-        self.model_path = "./trained_models/" + self.name
+        self.model_path = "./resolution_gridsearch/" + self.name
         self.model_path = os.path.join(os.getcwd(), ".", "trained_models", self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
