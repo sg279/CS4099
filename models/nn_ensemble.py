@@ -21,13 +21,14 @@ class NnEnsemble():
         self.val_preds = self.load_preds(os.listdir("./models/validation_preds"), "validation")
         self.val_classes = np.load("./models/classes/val_classes.npy")
         self.test_preds = self.load_preds(os.listdir("./models/test_preds"), "test")
+        self.test_classes = np.load("./models/classes/test_classes.npy")
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
         self.model_path = "./lr_gridsearch/" + self.name
         self.model_path = os.path.join(os.getcwd(), ".", "trained_models", self.name)
-        self.test_classes = np.load("./models/classes/test_classes.npy")
+
         os.makedirs(self.model_path, exist_ok=True)
         if nodes is None:
             self.nodes = 60

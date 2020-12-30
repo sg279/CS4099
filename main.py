@@ -21,6 +21,7 @@ from models.lr_ensemble import LrEnsemble
 from models.average_ensemble import AverageEnsemble
 from models.voting_ensemble import VotingEnsemble
 from models.nn_ensemble import NnEnsemble
+from models.mixed_data import MixedData
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import random
 
@@ -44,7 +45,18 @@ def evaluate(model, tuning=False):
 
     fpr, tpr, _ = roc_curve(model.test_classes, y_pred)
     roc_auc = auc(fpr, tpr)
+
     f.write("FPR: "+str(fpr)+ " TPR: "+str(tpr)+ " AUC: "+str(roc_auc)+"\n")
+    fn, tn = 0,0
+    for i in range(len(y_pred)):
+        if y_pred[i]==0 and model.test_classes ==0:
+            tn = tn+1
+        if y_pred[i]==0 and model.test_classes ==1:
+            fn = fn+1
+    fnr = fn/len(y_pred)
+    tnr=tn/len(y_pred)
+    f.write("FNR: " + str(fnr) + " TNR: " + str(tnr)+"\n")
+
     f.close()
     plt.figure()
     lw = 2
@@ -65,16 +77,29 @@ def main():
     random.seed(4099)
     np.random.seed(4099)
     tf.random.set_seed(4099)
-    name = "3_trainable_base_redo"
-    # print(name)
-    xm = xception(name)
+    name = "mixed_test_lr"
+
+    # xm = xception(name)
+    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    # data_dir = 'F:\\DDSM data\\pngs'
+    # xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+    # xm.make_model(False, False, 3)
+    # xm.train()
+    # evaluate(xm)
+    # xm.save_preds()
+    #
+
+
+    xm = MixedData(name)
     # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
     data_dir = 'F:\\DDSM data\\pngs'
     xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    xm.make_model(False, False, 3)
+    xm.make_model(False, False, 0)
     xm.train()
+    # results = xm.model.model.evaluate(xm.test_generator, xm.test_classes, batch_size=32)
+    # print("test loss, test acc:", results)
     evaluate(xm)
-    xm.save_preds()
+    # xm.save_preds()
 
     # name = "average"
     # avg = AverageEnsemble(name)
@@ -103,7 +128,7 @@ def main():
     #     lr.train()
     #     evaluate(lr)
 
-    # datagen = ImageDataGenerator(shear_range=20
+    # datagen = ImageDataGenerator(zoom_range=0.7
     #                                         )
     #
     # img = load_img('F:\\DDSM data\\pngs\\val\\B\\Calc-Test_P_00077_RIGHT_MLO.png')  # this is a PIL image
@@ -114,7 +139,7 @@ def main():
     # # and saves the results to the `preview/` directory
     # i = 0
     # for batch in datagen.flow_from_directory("F:\\DDSM data\\pngs\\preview2", batch_size=1, color_mode='grayscale',
-    #                           save_to_dir='F:\\DDSM data\\pngs\\preview', save_prefix='shear', save_format='jpg', target_size=(800,800)):
+    #                           save_to_dir='F:\\DDSM data\\pngs\\preview', save_prefix='zoom', save_format='jpg', target_size=(800,800)):
     #     i += 1
     #     if i > 0:
     #         break  #

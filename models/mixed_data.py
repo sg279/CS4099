@@ -10,7 +10,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import *
 from tensorflow.keras.applications import *
 from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger, TensorBoard
 from tensorflow.keras import backend as k
 from matplotlib import pyplot as plt
@@ -19,10 +19,11 @@ import numpy as np
 from sklearn.utils import class_weight
 import datetime
 import random
+import math
+from tensorflow.keras.models import load_model
 
 
-
-class xception():
+class MixedData():
 
     def __init__(self, model_name = None):
         # hyper parameters for model
@@ -47,10 +48,10 @@ class xception():
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
+        self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
+        os.makedirs(self.tensorboard_path, exist_ok=True)
         self.save_hyper_parameters()
-        random.seed(4099)
-        np.random.seed(4099)
-        tf.random.set_seed(4099)
+        self.i=0
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -66,6 +67,9 @@ class xception():
         f.close()
 
     def make_model(self, load=False, extra_block=False, trainable_base_layers = 0):
+        # if load:
+        #     self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
+        #     return
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
         base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
 
@@ -93,62 +97,118 @@ class xception():
         predictions = Dense(self.nb_classes, activation='softmax')(x)
 
         # add your top layer block to your base model
-        model = Model(base_model.input, predictions)
+        x = Model(base_model.input, predictions)
         for layer in base_model.layers[:self.based_model_last_block_layer_number-trainable_base_layers]:
             layer.trainable = False
 
+        # y = Sequential()
+        # y.add(Dense(10, input_dim=self.training_preds.shape[1], activation='relu'))
+        # y.add(Dense(1, activation='sigmoid'))
+        preds = Input(shape=(9, ))
+        # combined = concatenate([x.output, y.output])
+        combined = concatenate([x.output, preds])
+        # z = Dense(15, activation="relu")(combined)
+        # z = Dense(10, activation="relu")(z)
+        z = Dense(self.nb_classes, activation="softmax")(combined)
+        model = Model(inputs=[x.input, preds], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
                       metrics=['accuracy', keras.metrics.AUC()])
         if load:
             model.load_weights(self.top_weights_path)
+            # model = load_model(os.path.join(self.model_path, self.name))
         self.model = model
 
+
+    def custom_generator(self, images_list, preds, classes, batch_size, data_gen_args, test):
+        # i = 0
+        self.i=0
+        datagen = ImageDataGenerator()
+        indexes = list(range(0, len(images_list)-1))
+        if not test:
+            random.shuffle(indexes)
+        while True:
+            batch = {'images': [], 'preds': [], 'labels': []}
+            for b in range(batch_size):
+                try:
+                    if self.i == len(images_list)-1:
+                        self.i = 0
+                        if not test:
+                            random.shuffle(indexes)
+                    # Read image from list and convert to array
+                    image_path = images_list[indexes[self.i]]
+                    image = load_img(image_path, target_size=(self.img_height, self.img_width))
+                    image = datagen.apply_transform(image, data_gen_args)
+                    image = img_to_array(image)
+
+                    # Read data from csv using the name of current image
+                    yield_preds = preds[indexes[self.i], :]
+                    label = classes[indexes[self.i]]
+                    batch['images'].append(image)
+                    batch['preds'].append(yield_preds)
+                    batch['labels'].append(label)
+                    self.i += 1
+                except:
+                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list))+" index "+str(indexes[self.i]))
+                    random.shuffle(indexes)
+                    self.i = 0
+                    b=b-1
+
+            batch['images'] = np.array(batch['images'])
+            batch['preds'] = np.array(batch['preds'])
+            # Convert labels to categorical values
+            batch['labels'] = np.eye(self.nb_classes)[batch['labels']]
+            yield [batch['images'], batch['preds']], batch['labels']
+
+    def load_preds(self, models, mode):
+        labels = []
+        i = 0
+        for m in models:
+            pred_probas = np.load("./models/" + mode + "_preds/" + m)
+            predicts = pred_probas[:, 1]
+            # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
+            labels.append(predicts)
+            i += 1
+
+        # Ensemble with voting
+        labels = np.array(labels)
+        labels = np.transpose(labels, (1, 0))
+        return labels
+
+    def absoluteFilePaths(self, directory):
+        files = []
+        for dirpath, _, filenames in os.walk(directory):
+            for f in filenames:
+                files.append(os.path.abspath(os.path.join(dirpath, f)))
+        return files
+
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
-        self.train_data_dir, self.validation_data_dir, self.test_data_dir = train_data_dir, validation_data_dir, test_data_dir
-        train_datagen = ImageDataGenerator(rescale=1. / 255,
+        self.training_preds = self.load_preds(os.listdir("./models/training_preds"), "training")
+        self.training_classes = np.load("./models/classes/training_classes.npy")
+        self.val_preds = self.load_preds(os.listdir("./models/validation_preds"), "validation")
+        self.val_classes = np.load("./models/classes/val_classes.npy")
+        self.test_preds = self.load_preds(os.listdir("./models/test_preds"), "test")
+        self.test_classes = np.load("./models/classes/test_classes.npy")
+
+        tv_args = dict(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
                                            shear_range=self.transformation_ratio,
                                            zoom_range=self.transformation_ratio,
                                            cval=self.transformation_ratio,
                                            horizontal_flip=True,
-                                           vertical_flip=True
-                                           )
-
-        validation_datagen = ImageDataGenerator(rescale=1. / 255,
-                                                rotation_range=self.transformation_ratio,
-                                                shear_range=self.transformation_ratio,
-                                                zoom_range=self.transformation_ratio,
-                                                cval=self.transformation_ratio,
-                                                horizontal_flip=True,
-                                                vertical_flip=True
-                                                )
-
-        test_datagen = ImageDataGenerator(rescale=1. / 255)
-        self.train_generator = train_datagen.flow_from_directory(train_data_dir,
-                                                            target_size=(self.img_width, self.img_height),
-                                                            batch_size=self.batch_size,
-                                                            class_mode='categorical'
-                                                            # ,shuffle=False
-                                                            )
-
-        self.validation_generator = validation_datagen.flow_from_directory(validation_data_dir,
-                                                                      target_size=(self.img_width, self.img_height),
-                                                                      batch_size=self.batch_size,
-                                                                      class_mode='categorical'
-                                                                    #   ,shuffle=False
-                                                                      )
-
-        self.test_generator = test_datagen.flow_from_directory(test_data_dir,
-                                                          target_size=(self.img_width, self.img_height),
-                                                          batch_size=self.batch_size,
-                                                          class_mode='categorical',shuffle=False)
-
+                                           vertical_flip=True)
+        test_args = dict(rescale=1. / 255)
+        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir), self.training_preds, self.training_classes, self.batch_size, tv_args, False)
+        print("image list length: "+str(len(self.absoluteFilePaths(train_data_dir)))+"preds shape: "+str(self.training_preds.shape[0])+" classes: "+str(len(self.training_classes)))
+        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_preds, self.val_classes, self.batch_size, tv_args, False)
+        print("image list length: "+str(len(self.absoluteFilePaths(validation_data_dir)))+"preds shape: "+str(self.val_preds.shape[0])+" classes: "+str(len(self.val_classes)))
+        self.test_generator = self.custom_generator(self.absoluteFilePaths(test_data_dir), self.test_preds, self.test_classes, self.batch_size, test_args, True)
+        print("image list length: "+str(len(self.absoluteFilePaths(test_data_dir)))+"preds shape: "+str(self.test_preds.shape[0])+" classes: "+str(len(self.test_classes)))
         self.class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
                                                                          classes=np.unique(
-                                                                             self.train_generator.classes),
-                                                                         y=self.train_generator.classes)))
-        self.test_classes = self.test_generator.classes
+                                                                             self.training_classes),
+                                                                         y=self.training_classes)))
+        self.test_images_list = self.absoluteFilePaths(test_data_dir)
 
     def train(self):
 
@@ -157,16 +217,16 @@ class xception():
             ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
             EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
             CSVLogger(self.model_path+'/log.csv', append=True, separator=';'),
-            TensorBoard(self.tensorboard_path, update_freq=self.batch_size/4)
+            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size/4))
         ]
         class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
                                                                          classes=np.unique(
-                                                                             self.train_generator.classes),
-                                                                         y=self.train_generator.classes)))
+                                                                             self.training_classes),
+                                                                         y=self.training_classes)))
         # Train Simple CNN
-        self.model.fit(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch,
+        self.model.fit_generator(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch,
                   callbacks=callbacks_list,
-                  class_weight=class_weights)
+                  class_weight=class_weights, steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size), validation_steps=math.ceil(len(self.val_classes)/self.batch_size))
         self.model.save(self.model_path+"/"+self.name)
 
     def tune(self):
@@ -209,7 +269,22 @@ class xception():
         print(classification_report(self.test_generator.classes, y_pred, target_names=target_names))
 
     def test_predict(self):
-        return self.model.predict(self.test_generator)
+        datagen = ImageDataGenerator()
+        preds = None
+        data_gen_args = dict(rescale=1. / 255)
+        for i in range(len(self.test_classes)):
+            print(str(i)+"/"+str(len(self.test_classes)))
+            image_path = self.test_images_list[i]
+            image = load_img(image_path, target_size=(self.img_height, self.img_width))
+            image = datagen.apply_transform(image, data_gen_args)
+            image = img_to_array(image)
+            if preds is None:
+                preds = self.model.predict([np.array([image]), np.array([self.test_preds[i, :]])])
+            else:
+                preds = np.append(preds, self.model.predict([np.array([image]), np.array([self.test_preds[i, :]])]), axis=0)
+
+        return preds
+        # return self.model.predict(self.train_generator, steps=math.ceil(len(self.test_classes)/self.batch_size), verbose=1).round()[:len(self.test_classes)]
 
     def save_preds(self, tuning):
 
