@@ -49,9 +49,9 @@ def evaluate(model, tuning=False):
     f.write("FPR: "+str(fpr)+ " TPR: "+str(tpr)+ " AUC: "+str(roc_auc)+"\n")
     fn, tn = 0,0
     for i in range(len(y_pred)):
-        if y_pred[i]==0 and model.test_classes ==0:
+        if y_pred[i]==0 and model.test_classes[i] ==0:
             tn = tn+1
-        if y_pred[i]==0 and model.test_classes ==1:
+        if y_pred[i]==0 and model.test_classes[i] ==1:
             fn = fn+1
     fnr = fn/len(y_pred)
     tnr=tn/len(y_pred)
@@ -73,11 +73,40 @@ def evaluate(model, tuning=False):
     # plt.show()
 
 
+def get_aucs(dir):
+    models = os.listdir("./"+dir)
+    df = pd.DataFrame(columns=['model', 'max_val_auc', 'test_auc'])
+    for m in models:
+        aucs = pd.read_csv("./"+dir+"/"+m+"/log.csv", sep=";")["val_auc"]
+        test_auc = float(open("./"+dir+"/"+m+"/results.txt").read().split("AUC: ")[1])
+        # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
+        df = df.append(pd.Series({'model':m, 'max_val_auc':max(aucs), 'test_auc': test_auc}), ignore_index=True)
+
+    return df.sort("max_val_auc")
+
+def train_members():
+    for i in range(7):
+        seed = int("4"+str(i+1)+"99")
+        random.seed(seed)
+        np.random.seed(seed)
+        tf.random.set_seed(seed)
+        name = "ensemble_member_"+str(i+1)
+        xm = xception(model_name=name, trainable_base_layers=tl, resolution=r, transformation_ratio=tr, seed=4099)
+        data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+        # data_dir = 'F:\\DDSM data\\pngs'
+        xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+        xm.make_model(False, False)
+        xm.train()
+        evaluate(xm)
+        xm.save_preds("")
+
+
 def main():
     random.seed(4099)
     np.random.seed(4099)
     tf.random.set_seed(4099)
-    name = "mixed_test_lr"
+    name = "mixed_data_no_transformation"
+    # get_aucs("trained_models")
 
     # xm = xception(name)
     # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
@@ -87,23 +116,21 @@ def main():
     # xm.train()
     # evaluate(xm)
     # xm.save_preds()
-    #
 
 
-    xm = MixedData(name)
+
+    # xm = MixedData(name)
     # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
-    data_dir = 'F:\\DDSM data\\pngs'
-    xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    xm.make_model(False, False, 0)
-    xm.train()
-    # results = xm.model.model.evaluate(xm.test_generator, xm.test_classes, batch_size=32)
-    # print("test loss, test acc:", results)
-    evaluate(xm)
+    # data_dir = 'F:\\DDSM data\\pngs'
+    # xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+    # xm.make_model(False, False, 0)
+    # xm.train()
+    # evaluate(xm)
     # xm.save_preds()
 
-    # name = "average"
-    # avg = AverageEnsemble(name)
-    # evaluate(avg)
+    name = "average"
+    avg = AverageEnsemble(name, members=3)
+    evaluate(avg)
     # name = "voting"
     # voting = VotingEnsemble(name)
     # evaluate(voting)

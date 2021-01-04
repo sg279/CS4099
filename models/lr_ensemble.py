@@ -15,7 +15,7 @@ from tensorflow.keras.utils import to_categorical
 
 class LrEnsemble():
 
-    def __init__(self, model_name=None, nodes = None):
+    def __init__(self, model_name=None, nodes = None, members = None):
         self.training_preds = self.load_preds(os.listdir("./models/training_preds"), "training")
         self.training_classes = np.load("./models/classes/training_classes.npy")
         self.val_preds = self.load_preds(os.listdir("./models/validation_preds"), "validation")
@@ -25,7 +25,6 @@ class LrEnsemble():
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
-        self.model_path = "./lr_gridsearch/" + self.name
         self.model_path = os.path.join(os.getcwd(), ".", "trained_models", self.name)
         self.test_classes = np.load("./models/classes/test_classes.npy")
         os.makedirs(self.model_path, exist_ok=True)
@@ -33,11 +32,17 @@ class LrEnsemble():
             self.nodes = 60
         else:
             self.nodes = nodes
+        self.members = members
 
     def load_preds(self, models, mode):
+
+        if self.members is None:
+            self.members = len(models)
+        else:
+            self.members = self.members
         labels = []
-        i = 0
-        for m in models:
+        for i in range(self.members):
+            m = models[i]
             pred_probas = np.load("./models/" + mode + "_preds/" + m)
             predicts = pred_probas[:, 1]
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)

@@ -25,24 +25,26 @@ from tensorflow.keras.models import load_model
 
 class MixedData():
 
-    def __init__(self, model_name = None):
+    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, members = None):
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 400, 400  # change based on the shape/structure of your images
+        self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
-        self.transformation_ratio = .05
+        self.transformation_ratio = transformation_ratio
+        self.trainable_base_layers = trainable_base_layers
+        self.seed = seed
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
         # os.mkdir(".\\" + self.name)
-        self.model_path = "./resolution_gridsearch/" + self.name
-        self.model_path = os.path.join(os.getcwd(),".", "trained_models", self.name)
+        self.model_path = "./layers_gridsearch/" + self.name
+        self.model_path = os.path.join(os.getcwd(),".", "parameter_gridsearch", self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
@@ -51,7 +53,11 @@ class MixedData():
         self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
         os.makedirs(self.tensorboard_path, exist_ok=True)
         self.save_hyper_parameters()
+        random.seed(seed)
+        np.random.seed(seed)
+        tf.random.set_seed(seed)
         self.i=0
+        self.members = members
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -61,12 +67,12 @@ class MixedData():
         f.write("img_height: " + str(self.img_height)+"\n")
         f.write("batch_size: "+str(self.batch_size)+"\n")
         f.write("nb_epoch: " + str(self.nb_epoch)+"\n")
-        f.write("learn_rate: " + str(self.learn_rate)+"\n")
-        f.write("momentum: " + str(self.momentum)+"\n")
+        f.write("trainable base layers: " + str(self.trainable_base_layers)+"\n")
+        f.write("random seed: " + str(self.seed)+"\n")
         f.write("transformation_ratio: " + str(self.transformation_ratio))
         f.close()
 
-    def make_model(self, load=False, extra_block=False, trainable_base_layers = 0):
+    def make_model(self, load=False, extra_block=False):
         # if load:
         #     self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
         #     return
@@ -98,18 +104,18 @@ class MixedData():
 
         # add your top layer block to your base model
         x = Model(base_model.input, predictions)
-        for layer in base_model.layers[:self.based_model_last_block_layer_number-trainable_base_layers]:
+        for layer in base_model.layers[:self.based_model_last_block_layer_number-self.trainable_base_layers]:
             layer.trainable = False
 
         # y = Sequential()
         # y.add(Dense(10, input_dim=self.training_preds.shape[1], activation='relu'))
         # y.add(Dense(1, activation='sigmoid'))
-        preds = Input(shape=(9, ))
+        preds = Input(shape=(self.members, ))
         # combined = concatenate([x.output, y.output])
         combined = concatenate([x.output, preds])
-        # z = Dense(15, activation="relu")(combined)
-        # z = Dense(10, activation="relu")(z)
-        z = Dense(self.nb_classes, activation="softmax")(combined)
+        z = Dense(10, activation="relu")(combined)
+        z = Dense(5, activation="relu")(z)
+        z = Dense(self.nb_classes, activation="softmax")(z)
         model = Model(inputs=[x.input, preds], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
@@ -124,14 +130,14 @@ class MixedData():
         # i = 0
         self.i=0
         datagen = ImageDataGenerator()
-        indexes = list(range(0, len(images_list)-1))
+        indexes = list(range(0, len(images_list)))
         if not test:
             random.shuffle(indexes)
         while True:
             batch = {'images': [], 'preds': [], 'labels': []}
             for b in range(batch_size):
                 try:
-                    if self.i == len(images_list)-1:
+                    if self.i == len(images_list):
                         self.i = 0
                         if not test:
                             random.shuffle(indexes)
@@ -149,7 +155,8 @@ class MixedData():
                     batch['labels'].append(label)
                     self.i += 1
                 except:
-                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list))+" index "+str(indexes[self.i]))
+                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list)))
+                    print(indexes)
                     random.shuffle(indexes)
                     self.i = 0
                     b=b-1
@@ -161,9 +168,12 @@ class MixedData():
             yield [batch['images'], batch['preds']], batch['labels']
 
     def load_preds(self, models, mode):
+
+        if self.members is None:
+            self.members = len(models)
         labels = []
-        i = 0
-        for m in models:
+        for i in range(self.members):
+            m = models[i]
             pred_probas = np.load("./models/" + mode + "_preds/" + m)
             predicts = pred_probas[:, 1]
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)

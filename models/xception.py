@@ -24,33 +24,41 @@ import random
 
 class xception():
 
-    def __init__(self, model_name = None):
+    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099):
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = 400, 400  # change based on the shape/structure of your images
+        self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
         self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
-        self.transformation_ratio = .05
+        self.transformation_ratio = transformation_ratio
+        self.trainable_base_layers = trainable_base_layers
+        self.seed = seed
+
+
+
+
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
         # os.mkdir(".\\" + self.name)
-        self.model_path = "./resolution_gridsearch/" + self.name
-        self.model_path = os.path.join(os.getcwd(),".", "trained_models", self.name)
+        self.model_path = "./layers_gridsearch/" + self.name
+        self.model_path = os.path.join(os.getcwd(),".", "parameter_gridsearch", self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
+        self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
+        os.makedirs(self.tensorboard_path, exist_ok=True)
         self.save_hyper_parameters()
-        random.seed(4099)
-        np.random.seed(4099)
-        tf.random.set_seed(4099)
+        random.seed(seed)
+        np.random.seed(seed)
+        tf.random.set_seed(seed)
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -60,12 +68,12 @@ class xception():
         f.write("img_height: " + str(self.img_height)+"\n")
         f.write("batch_size: "+str(self.batch_size)+"\n")
         f.write("nb_epoch: " + str(self.nb_epoch)+"\n")
-        f.write("learn_rate: " + str(self.learn_rate)+"\n")
-        f.write("momentum: " + str(self.momentum)+"\n")
+        f.write("trainable base layers: " + str(self.trainable_base_layers)+"\n")
+        f.write("random seed: " + str(self.seed)+"\n")
         f.write("transformation_ratio: " + str(self.transformation_ratio))
         f.close()
 
-    def make_model(self, load=False, extra_block=False, trainable_base_layers = 0):
+    def make_model(self, load=False, extra_block=False):
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
         base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
 
@@ -94,12 +102,12 @@ class xception():
 
         # add your top layer block to your base model
         model = Model(base_model.input, predictions)
-        for layer in base_model.layers[:self.based_model_last_block_layer_number-trainable_base_layers]:
+        for layer in base_model.layers[:self.based_model_last_block_layer_number-self.trainable_base_layers]:
             layer.trainable = False
 
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
-                      metrics=['accuracy', keras.metrics.AUC()])
+                      metrics=['accuracy', keras.metrics.AUC(name='auc')])
         if load:
             model.load_weights(self.top_weights_path)
         self.model = model
@@ -157,7 +165,7 @@ class xception():
             ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
             EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
             CSVLogger(self.model_path+'/log.csv', append=True, separator=';'),
-            TensorBoard(self.tensorboard_path, update_freq=self.batch_size/4)
+            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size/4))
         ]
         class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
                                                                          classes=np.unique(

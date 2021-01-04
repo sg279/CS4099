@@ -9,11 +9,15 @@ from tensorflow.keras.utils import to_categorical
 
 class VotingEnsemble:
 
-    def __init__(self, model_name=None):
+    def __init__(self, model_name=None, members=None):
         models = os.listdir("./models/test_preds")
+        if members is None:
+            self.members = len(models)
+        else:
+            self.members = members
         labels = []
-        i = 0
-        for m in models:
+        for i in range(self.members):
+            m = models[i]
             pred_probas = np.load("./models/test_preds/" + m)
             predicts = np.argmax(pred_probas, axis=1)
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
