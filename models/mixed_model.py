@@ -83,17 +83,17 @@ class MixedModel():
         #     return
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
         input = Input(shape=(self.img_width, self.img_height, 3))
-        xception = self.make_member(Xception(input_tensor=Input(shape=(self.img_width, self.img_height, 3)), weights='imagenet', include_top=False), self.xception_model_last_block_layer_number)
-        mobilenet = self.make_member(MobileNetV2(input_tensor=Input(shape=(self.img_width, self.img_height, 3)), weights='imagenet', include_top=False), self.mobilenet_model_last_block_layer_number)
-        resnet = self.make_member(ResNet152V2(input_tensor=Input(shape=(self.img_width, self.img_height, 3)), weights='imagenet', include_top=False), self.resnet_model_last_block_layer_number)
-        inceptionresnet = self.make_member(InceptionResNetV2(input_tensor=Input(shape=(self.img_width, self.img_height, 3)), weights='imagenet', include_top=False), self.inceptionresnet_model_last_block_layer_number)
-        inception = self.make_member(InceptionV3(input_tensor=Input(shape=(self.img_width, self.img_height, 3)), weights='imagenet', include_top=False), self.inception_model_last_block_layer_number)
+        xception = self.make_member(Xception(input_tensor=input, weights='imagenet', include_top=False), self.xception_model_last_block_layer_number)
+        mobilenet = self.make_member(MobileNetV2(input_tensor=input, weights='imagenet', include_top=False), self.mobilenet_model_last_block_layer_number)
+        resnet = self.make_member(ResNet152V2(input_tensor=input, weights='imagenet', include_top=False), self.resnet_model_last_block_layer_number)
+        inceptionresnet = self.make_member(InceptionResNetV2(input_tensor=input, weights='imagenet', include_top=False), self.inceptionresnet_model_last_block_layer_number)
+        inception = self.make_member(InceptionV3(input_tensor=input, weights='imagenet', include_top=False), self.inception_model_last_block_layer_number)
         # combined = concatenate([x.output, y.output])
-        combined = concatenate([xception.output, mobilenet.output, resnet.output, inceptionresnet.output, inception.output])
+        combined = concatenate([xception, mobilenet, resnet, inceptionresnet, inception])
         z = Dense(10, activation="relu")(combined)
         z = Dense(5, activation="relu")(z)
         z = Dense(self.nb_classes, activation="softmax")(z)
-        model = Model(inputs=[xception.input, mobilenet.input, resnet.input, inceptionresnet.input, inception.input], outputs=z)
+        model = Model(inputs=input, outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
                       metrics=['accuracy', keras.metrics.AUC(name='auc')])
@@ -105,9 +105,9 @@ class MixedModel():
     def make_member(self, base_model, base_layers):
         x = base_model.output
         x = GlobalAveragePooling2D()(x)
-        predictions = Dense(self.nb_classes, activation='softmax')(x)
+        x = Dense(self.nb_classes, activation='softmax')(x)
         # add your top layer block to your base model
-        x = Model(base_model.input, predictions)
+        # x = Model(base_model.input, predictions)
         for layer in base_model.layers[:base_layers - self.trainable_base_layers]:
             layer.trainable = False
         return x
@@ -146,7 +146,7 @@ class MixedModel():
             batch['images'] = np.array(batch['images'])
             # Convert labels to categorical values
             batch['labels'] = np.eye(self.nb_classes)[batch['labels']]
-            yield [batch['images'], batch['images'], batch['images'], batch['images'], batch['images']], batch['labels']
+            yield [batch['images']], batch['labels']
 
     def absoluteFilePaths(self, directory):
         files = []
