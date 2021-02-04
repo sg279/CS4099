@@ -22,6 +22,11 @@ from models.average_ensemble import AverageEnsemble
 from models.voting_ensemble import VotingEnsemble
 from models.nn_ensemble import NnEnsemble
 from models.mixed_data import MixedData
+from models.vgg16 import vgg
+from models.mobilenetv2 import mobilenet
+from models.inceptionv3 import inception
+from models.inception_resnet_v2 import inceptionResnet
+from models.mixed_model import MixedModel
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import random
 
@@ -73,17 +78,6 @@ def evaluate(model, tuning=False):
     # plt.show()
 
 
-def get_aucs(dir):
-    models = os.listdir("./"+dir)
-    df = pd.DataFrame(columns=['model', 'max_val_auc', 'test_auc'])
-    for m in models:
-        aucs = pd.read_csv("./"+dir+"/"+m+"/log.csv", sep=";")["val_auc"]
-        test_auc = float(open("./"+dir+"/"+m+"/results.txt").read().split("AUC: ")[1])
-        # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
-        df = df.append(pd.Series({'model':m, 'max_val_auc':max(aucs), 'test_auc': test_auc}), ignore_index=True)
-
-    return df.sort("max_val_auc")
-
 def train_members():
     for i in range(7):
         seed = int("4"+str(i+1)+"99")
@@ -91,7 +85,7 @@ def train_members():
         np.random.seed(seed)
         tf.random.set_seed(seed)
         name = "ensemble_member_"+str(i+1)
-        xm = xception(model_name=name, trainable_base_layers=tl, resolution=r, transformation_ratio=tr, seed=4099)
+        xm = xception(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099)
         data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
         # data_dir = 'F:\\DDSM data\\pngs'
         xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
@@ -101,21 +95,112 @@ def train_members():
         xm.save_preds("")
 
 
+def create_mixed_data_ensembles():
+    members = [5,7,9]
+    for m in members:
+        name = "mixed_data_"+str(m)+"_members"
+        md = MixedData(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099, members=m,
+                       preds_dir="parameter_gridsearch", model_dir="mixed_data_gridsearch_ensembles")
+        # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+        data_dir = 'F:\\DDSM data\\pngs'
+        md.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+        md.make_model(False, False)
+        md.train()
+        evaluate(md)
+        # xm.save_preds("")
+
+def create_voting_ensembles():
+    members = [3,5,7,9]
+    for m in members:
+        name = "voting_"+str(m)+"_members"
+        voting = VotingEnsemble(model_name=name, members=m, model_dir="voting_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        evaluate(voting)
+
+def create_average_ensembles():
+    members = [3,5,7,9]
+    for m in members:
+        name = "average_"+str(m)+"_members"
+        avg = AverageEnsemble(model_name=name, members=m, model_dir="average_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        evaluate(avg)
+
+def create_lr_ensembles():
+    members = [3, 5, 7, 9]
+    for m in members:
+        name = "lr_" + str(m) + "_members"
+        # lr = LrEnsemble(model_name=name, members=m, model_dir="lr_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        lr = LrEnsemble(model_name=name, members=m)
+        lr.make_model()
+        lr.train()
+        evaluate(lr)
+
+def create_nn_ensembles():
+    members = [3, 5, 7, 9]
+    for m in members:
+        name = "nn_" + str(m) + "_members"
+        # nn = NnEnsemble(model_name=name, members=m, nodes=10, model_dir="nn_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        nn = NnEnsemble(model_name=name, members=m, nodes=10)
+        nn.make_model()
+        nn.train()
+        evaluate(nn)
+
+
 def main():
     random.seed(4099)
     np.random.seed(4099)
     tf.random.set_seed(4099)
-    name = "mixed_data_no_transformation"
-    # get_aucs("trained_models")
 
-    # xm = xception(name)
+    name = "mixed_data_diverse_members"
+    mm = MixedModel(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099,preds_dir="diverse_ensemble_members",
+                    model_dir="diverse_ensembles")
+    # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    data_dir = 'F:\\DDSM data\\pngs'
+    mm.make_generators(os.path.join(data_dir, "small_test"), os.path.join(data_dir, "small_test"), os.path.join(data_dir, "small_test"))
+    mm.make_model(False, False)
+    mm.train()
+    evaluate(mm)
+
+
+    # name = "nn_diverse_members"
+    # nn = NnEnsemble(model_name=name, members=5, nodes=10, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
+    # nn.make_model()
+    # nn.train()
+    # evaluate(nn)
+    # name = "lr_diverse_members"
+    # lr = LrEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
+    # lr.make_model()
+    # lr.train()
+    # evaluate(lr)
+    # name = "average_diverse_members"
+    # avg = AverageEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
+    # evaluate(avg)
+    # name = "voting_diverse_members"
+    # voting = VotingEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
+    # evaluate(voting)
+    # name = "mixed_data_diverse_members"
+    # md = MixedData(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099,
+    #                members=5,
+    #                preds_dir="diverse_ensemble_members", model_dir="diverse_ensembles")
     # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
     # data_dir = 'F:\\DDSM data\\pngs'
+    # md.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+    # md.make_model(False, False)
+    # md.train()
+    # evaluate(md)
+
+    # create_mixed_data_ensembles()
+    # create_average_ensembles()
+    # create_voting_ensembles()
+    # create_lr_ensembles()
+    # create_nn_ensembles()
+
+    # xm = xception(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099)
+    # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    # data_dir = 'F:\\DDSM data\\pngs'
     # xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # xm.make_model(False, False, 3)
+    # xm.make_model(True, False)
     # xm.train()
     # evaluate(xm)
-    # xm.save_preds()
+    # xm.save_preds("")
 
 
 
@@ -128,49 +213,21 @@ def main():
     # evaluate(xm)
     # xm.save_preds()
 
-    name = "average"
-    avg = AverageEnsemble(name, members=3)
-    evaluate(avg)
-    # name = "voting"
-    # voting = VotingEnsemble(name)
+    # name = "average"
+    # avg = AverageEnsemble(name, members=3)
+    # evaluate(avg)
+    # voting = VotingEnsemble(model_name="new_member_voting_test", model_dir="trained_models", members=3)
     # evaluate(voting)
-    # name = "LR"
-    # lr = LrEnsemble(name, nodes=0)
+
+    # lr = LrEnsemble(model_name="new_member_lr_test", model_dir="trained_models", members=3)
     # lr.make_model()
     # lr.train()
     # evaluate(lr)
-    # name = "NN"
-    # nn = NnEnsemble(name, 10)
+    #
+    # nn = NnEnsemble(model_name="new_member_nn_test", model_dir="trained_models", members=7, nodes=3)
     # nn.make_model()
     # nn.train()
     # evaluate(nn)
-    # name = "best_performing"
-    # voting = LrEnsemble(name)
-    # evaluate(voting)
-
-    # for i in range(10, 100, 10):
-    #     name = "LR_"+str(i)
-    #     lr = LrEnsemble(name, nodes=i)
-    #     lr.make_model()
-    #     lr.train()
-    #     evaluate(lr)
-
-    # datagen = ImageDataGenerator(zoom_range=0.7
-    #                                         )
-    #
-    # img = load_img('F:\\DDSM data\\pngs\\val\\B\\Calc-Test_P_00077_RIGHT_MLO.png')  # this is a PIL image
-    # # x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
-    # # x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
-    #
-    # # the .flow() command below generates batches of randomly transformed images
-    # # and saves the results to the `preview/` directory
-    # i = 0
-    # for batch in datagen.flow_from_directory("F:\\DDSM data\\pngs\\preview2", batch_size=1, color_mode='grayscale',
-    #                           save_to_dir='F:\\DDSM data\\pngs\\preview', save_prefix='zoom', save_format='jpg', target_size=(800,800)):
-    #     i += 1
-    #     if i > 0:
-    #         break  #
-
 
 if __name__ == '__main__':
     # mias_conversion("val")

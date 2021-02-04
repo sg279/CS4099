@@ -9,8 +9,10 @@ from tensorflow.keras.utils import to_categorical
 
 class VotingEnsemble:
 
-    def __init__(self, model_name=None, members=None):
-        models = os.listdir("./models/test_preds")
+    def __init__(self, model_name=None, members=None, preds_dir = "ensemble_members", model_dir = "voting_ensembles"):
+        self.preds_dir = preds_dir
+        self.model_dir = model_dir
+        models = os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds"))
         if members is None:
             self.members = len(models)
         else:
@@ -18,7 +20,7 @@ class VotingEnsemble:
         labels = []
         for i in range(self.members):
             m = models[i]
-            pred_probas = np.load("./models/test_preds/" + m)
+            pred_probas = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds", m))
             predicts = np.argmax(pred_probas, axis=1)
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
             labels.append(predicts)
@@ -28,16 +30,16 @@ class VotingEnsemble:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name + "_" + datetime.datetime.now().strftime('%d-%m-%y')
-        self.model_path = "./resolution_gridsearch/" + self.name
-        self.model_path = os.path.join(os.getcwd(), ".", "trained_models", self.name)
+        self.model_path = os.path.join(os.getcwd(), ".", self.model_dir, self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
-        self.test_classes = np.load("./models/classes/test_classes.npy")
+        self.test_classes = np.load(os.path.join(os.getcwd(),self.preds_dir, "classes", "test_classes.npy"))
 
     def test_predict(self):
         labels = np.array(self.labels)
         labels = np.transpose(labels, (1, 0))
-        labels = stats.mode(labels, axis=1)[0]
+        # labels = stats.mode(labels, axis=1)[0]
+        labels = np.max(labels, axis=1)
         # labels = np.squeeze(labels)
         return to_categorical(labels)
 

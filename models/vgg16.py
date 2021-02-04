@@ -22,14 +22,14 @@ import random
 
 
 
-class xception():
+class vgg():
 
-    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, dir="ensemble_members"):
+    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, model_dir="ensemble_members"):
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
-        self.based_model_last_block_layer_number = 126  # value is based on based model selected.
+        self.based_model_last_block_layer_number = 88  # value is based on based model selected.
         self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
-        self.batch_size = 16  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
+        self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
@@ -46,7 +46,7 @@ class xception():
             # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
         # os.mkdir(".\\" + self.name)
-        self.model_path = os.path.join(os.getcwd(),".", dir, self.name)
+        self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
@@ -73,8 +73,9 @@ class xception():
         f.close()
 
     def make_model(self, load=False, extra_block=False):
+        input = Input(shape=(self.img_width, self.img_height, 3))
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
-        base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        base_model = MobileNetV2(input_tensor=input, weights='imagenet', include_top=False)
 
         if extra_block:
             # Top Model Block
@@ -95,9 +96,10 @@ class xception():
             x = GlobalAveragePooling2D()(x)
         else:
             x = base_model.output
+
             x = GlobalAveragePooling2D()(x)
 
-        predictions = Dense(self.nb_classes, activation='softmax')(x)
+        predictions = Dense(self.nb_classes, activation='sigmoid')(x)
 
         # add your top layer block to your base model
         model = Model(base_model.input, predictions)

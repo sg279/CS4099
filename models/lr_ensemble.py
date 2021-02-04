@@ -11,28 +11,32 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from tensorflow.keras.metrics import AUC
 import datetime
 from tensorflow.keras.utils import to_categorical
+import tensorflow as tf
+import random
 
 
 class LrEnsemble():
 
-    def __init__(self, model_name=None, nodes = None, members = None):
-        self.training_preds = self.load_preds(os.listdir("./models/training_preds"), "training")
-        self.training_classes = np.load("./models/classes/training_classes.npy")
-        self.val_preds = self.load_preds(os.listdir("./models/validation_preds"), "validation")
-        self.val_classes = np.load("./models/classes/val_classes.npy")
-        self.test_preds = self.load_preds(os.listdir("./models/test_preds"), "test")
+    def __init__(self, model_name=None, members = None, seed = 4099, preds_dir = "ensemble_members", model_dir = "lr_ensembles"):
+        self.preds_dir = preds_dir
+        self.model_dir = model_dir
+        self.members = members
+        self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
+        self.training_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "training_classes.npy"))
+        self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
+        self.val_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "val_classes.npy"))
+        self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
+        self.test_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "test_classes.npy"))
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
-        self.model_path = os.path.join(os.getcwd(), ".", "trained_models", self.name)
-        self.test_classes = np.load("./models/classes/test_classes.npy")
+        self.model_path = os.path.join(os.getcwd(), ".", self.model_dir, self.name)
         os.makedirs(self.model_path, exist_ok=True)
-        if nodes is None:
-            self.nodes = 60
-        else:
-            self.nodes = nodes
-        self.members = members
+
+        random.seed(seed)
+        np.random.seed(seed)
+        tf.random.set_seed(seed)
 
     def load_preds(self, models, mode):
 
@@ -43,7 +47,7 @@ class LrEnsemble():
         labels = []
         for i in range(self.members):
             m = models[i]
-            pred_probas = np.load("./models/" + mode + "_preds/" + m)
+            pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
             predicts = pred_probas[:, 1]
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
             labels.append(predicts)
@@ -59,7 +63,7 @@ class LrEnsemble():
         model.add(Dense(1, activation='sigmoid'))
         # Compile model
 
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', AUC()])
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', AUC(name="auc")])
         if load:
             model.load_weights(self.top_weights_path)
         self.model = model
@@ -78,9 +82,9 @@ class LrEnsemble():
         self.model.save(self.model_path + "/" + self.name)
 
     def test_predict(self):
-        # return to_categorical(self.model.predict(self.test_preds).round())
-
-        return to_categorical(self.test_preds.round())
+        return to_categorical(self.model.predict(self.test_preds).round())
+        #
+        # return to_categorical(self.test_preds.round())
 
 
 def lr_ensemble():

@@ -25,26 +25,28 @@ from tensorflow.keras.models import load_model
 
 class MixedData():
 
-    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, members = None):
+    def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, members = None,
+                 preds_dir = "ensemble_members", model_dir = "mixed_data_ensembles"):
+        self.preds_dir = preds_dir
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
         self.based_model_last_block_layer_number = 126  # value is based on based model selected.
         self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
-        self.batch_size = 32  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
+        self.batch_size = 16  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
         self.nb_epoch = 50  # number of iteration the algorithm gets trained.
         self.learn_rate = 1e-4  # sgd learning rate
         self.momentum = .9  # sgd momentum to avoid local minimum
         self.transformation_ratio = transformation_ratio
         self.trainable_base_layers = trainable_base_layers
         self.seed = seed
+        self.members = members
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
         # os.mkdir(".\\" + self.name)
-        self.model_path = "./layers_gridsearch/" + self.name
-        self.model_path = os.path.join(os.getcwd(),".", "parameter_gridsearch", self.name)
+        self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
         # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
@@ -57,7 +59,7 @@ class MixedData():
         np.random.seed(seed)
         tf.random.set_seed(seed)
         self.i=0
-        self.members = members
+
 
     def save_hyper_parameters(self):
         # f = open(self.model_path+"/hyper_parameters.txt", 'w')
@@ -119,7 +121,7 @@ class MixedData():
         model = Model(inputs=[x.input, preds], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
-                      metrics=['accuracy', keras.metrics.AUC()])
+                      metrics=['accuracy', keras.metrics.AUC(name='auc')])
         if load:
             model.load_weights(self.top_weights_path)
             # model = load_model(os.path.join(self.model_path, self.name))
@@ -174,7 +176,7 @@ class MixedData():
         labels = []
         for i in range(self.members):
             m = models[i]
-            pred_probas = np.load("./models/" + mode + "_preds/" + m)
+            pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
             predicts = pred_probas[:, 1]
             # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
             labels.append(predicts)
@@ -193,12 +195,12 @@ class MixedData():
         return files
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
-        self.training_preds = self.load_preds(os.listdir("./models/training_preds"), "training")
-        self.training_classes = np.load("./models/classes/training_classes.npy")
-        self.val_preds = self.load_preds(os.listdir("./models/validation_preds"), "validation")
-        self.val_classes = np.load("./models/classes/val_classes.npy")
-        self.test_preds = self.load_preds(os.listdir("./models/test_preds"), "test")
-        self.test_classes = np.load("./models/classes/test_classes.npy")
+        self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
+        self.training_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "training_classes.npy"))
+        self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
+        self.val_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "val_classes.npy"))
+        self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
+        self.test_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "test_classes.npy"))
 
         tv_args = dict(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
