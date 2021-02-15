@@ -90,7 +90,7 @@ def train_members():
 
 
 def create_mixed_data_ensembles():
-    members = [5,7,9]
+    members = [3,5,7,9]
     for m in members:
         name = "mixed_data_"+str(m)+"_members"
         md = MixedData(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099, members=m,
@@ -154,6 +154,26 @@ def parameter_gridsearch():
                 model.train()
                 evaluate(model)
                 model.save_preds()
+
+def create_diverse_models():
+    models = [[Xception,"xception", 126],
+              [MobileNetV2, "mobilenetV2", 88],
+              [InceptionV3, "inceptionV3", 159],
+              [InceptionResNetV2, "inceptionresnetV2", 572],
+              [ResNet152V2, "resnet152V2", 564]
+              [VGG19, "vgg19", 26]
+              ]
+    for m in models:
+        name = m[1]
+        model = BaseModel(model_name=name, base_model=m[0], base_layers=m[2], model_dir="diverse_model_tests")
+        # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
+        data_dir = 'F:\\DDSM data\\pngs_corrected'
+        model.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"),
+                              os.path.join(data_dir, "test"))
+        model.make_model(False)
+        model.train()
+        evaluate(model)
+        model.save_preds()
 
 
 def main():

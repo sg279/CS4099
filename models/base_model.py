@@ -40,6 +40,7 @@ class BaseModel():
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
             self.name = model_name
+        self.model_dir = model_dir
         self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
         os.makedirs(self.model_path, exist_ok=True)
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
@@ -198,15 +199,15 @@ class BaseModel():
                                                           target_size=(self.img_width, self.img_height),
                                                           batch_size=self.batch_size,
                                                           class_mode='categorical',shuffle=False)
-        os.makedirs(os.path.join(self.model_path,"training_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"validation_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"test_preds"), exist_ok=True)
+        os.makedirs(os.path.join(self.model_dir,"training_preds"), exist_ok=True)
+        os.makedirs(os.path.join(self.model_dir,"validation_preds"), exist_ok=True)
+        os.makedirs(os.path.join(self.model_dir,"test_preds"), exist_ok=True)
         pred_probas = self.model.predict(train_generator)
         predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"training_preds",self.name), pred_probas)
+        np.save(os.path.join(self.model_dir,"training_preds",self.name), pred_probas)
         pred_probas = self.model.predict(validation_generator)
         predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"validation_preds",self.name), pred_probas)
+        np.save(os.path.join(self.model_dir,"validation_preds",self.name), pred_probas)
         pred_probas = self.model.predict(test_generator)
         predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"test_preds",self.name), pred_probas)
+        np.save(os.path.join(self.model_dir,"test_preds",self.name), pred_probas)
