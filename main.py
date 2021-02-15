@@ -16,17 +16,11 @@ from tensorflow.keras import backend as k
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.utils import class_weight
-from models.xception import xception
-from models.lr_ensemble import LrEnsemble
-from models.average_ensemble import AverageEnsemble
-from models.voting_ensemble import VotingEnsemble
-from models.nn_ensemble import NnEnsemble
+from models.base_model import BaseModel
 from models.mixed_data import MixedData
-from models.vgg16 import vgg
-from models.mobilenetv2 import mobilenet
-from models.inceptionv3 import inception
-from models.inception_resnet_v2 import inceptionResnet
-from models.mixed_model import MixedModel
+from models.expert_ensemble import ExpertEnsemble
+from models.ff_ensemble import FfEnsemble
+from models.mixed_ff import MixedFF
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import random
 
@@ -113,14 +107,14 @@ def create_voting_ensembles():
     members = [3,5,7,9]
     for m in members:
         name = "voting_"+str(m)+"_members"
-        voting = VotingEnsemble(model_name=name, members=m, model_dir="voting_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        voting = ExpertEnsemble(model_name=name, members=m, model_dir="voting_gridsearch_ensemble", preds_dir="parameter_gridsearch", mode="voting")
         evaluate(voting)
 
 def create_average_ensembles():
     members = [3,5,7,9]
     for m in members:
         name = "average_"+str(m)+"_members"
-        avg = AverageEnsemble(model_name=name, members=m, model_dir="average_gridsearch_ensemble", preds_dir="parameter_gridsearch")
+        avg = ExpertEnsemble(model_name=name, members=m, model_dir="average_gridsearch_ensemble", preds_dir="parameter_gridsearch", mode="average")
         evaluate(avg)
 
 def create_lr_ensembles():
@@ -128,7 +122,7 @@ def create_lr_ensembles():
     for m in members:
         name = "lr_" + str(m) + "_members"
         # lr = LrEnsemble(model_name=name, members=m, model_dir="lr_gridsearch_ensemble", preds_dir="parameter_gridsearch")
-        lr = LrEnsemble(model_name=name, members=m)
+        lr = FfEnsemble(model_name=name, members=m, mode="lr")
         lr.make_model()
         lr.train()
         evaluate(lr)
@@ -138,10 +132,28 @@ def create_nn_ensembles():
     for m in members:
         name = "nn_" + str(m) + "_members"
         # nn = NnEnsemble(model_name=name, members=m, nodes=10, model_dir="nn_gridsearch_ensemble", preds_dir="parameter_gridsearch")
-        nn = NnEnsemble(model_name=name, members=m, nodes=10)
+        nn = FfEnsemble(model_name=name, members=m, mode="nn")
         nn.make_model()
         nn.train()
         evaluate(nn)
+
+def parameter_gridsearch():
+    resolutions = [400,600,800]
+    trainable_layers = [0,5,10]
+    transformation_ratios = [0.05, 0.1, 0.15]
+
+    for r in resolutions:
+        for tl in trainable_layers:
+            for tr in transformation_ratios:
+                name = str(tl)+"trainable_layers_"+str(r)+"_resolution_"+str(tr)+"_transformation_ration"
+                model = BaseModel(model_name=name, transformation_ratio = tr, trainable_base_layers = tl, resolution = r, model_dir="parameter_gridsearch")
+                # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+                data_dir = 'F:\\DDSM data\\pngs_corrected'
+                model.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"),os.path.join(data_dir, "test"))
+                model.make_model(False)
+                model.train()
+                evaluate(model)
+                model.save_preds()
 
 
 def main():
@@ -149,43 +161,6 @@ def main():
     np.random.seed(4099)
     tf.random.set_seed(4099)
 
-    name = "mixed_data_diverse_members"
-    mm = MixedModel(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099,preds_dir="diverse_ensemble_members",
-                    model_dir="diverse_ensembles")
-    # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
-    data_dir = 'F:\\DDSM data\\pngs'
-    mm.make_generators(os.path.join(data_dir, "small_test"), os.path.join(data_dir, "small_test"), os.path.join(data_dir, "small_test"))
-    mm.make_model(False, False)
-    mm.train()
-    evaluate(mm)
-
-
-    # name = "nn_diverse_members"
-    # nn = NnEnsemble(model_name=name, members=5, nodes=10, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
-    # nn.make_model()
-    # nn.train()
-    # evaluate(nn)
-    # name = "lr_diverse_members"
-    # lr = LrEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
-    # lr.make_model()
-    # lr.train()
-    # evaluate(lr)
-    # name = "average_diverse_members"
-    # avg = AverageEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
-    # evaluate(avg)
-    # name = "voting_diverse_members"
-    # voting = VotingEnsemble(model_name=name, members=5, model_dir="diverse_ensembles", preds_dir="diverse_ensemble_members")
-    # evaluate(voting)
-    # name = "mixed_data_diverse_members"
-    # md = MixedData(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099,
-    #                members=5,
-    #                preds_dir="diverse_ensemble_members", model_dir="diverse_ensembles")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # md.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # md.make_model(False, False)
-    # md.train()
-    # evaluate(md)
 
     # create_mixed_data_ensembles()
     # create_average_ensembles()
@@ -193,16 +168,26 @@ def main():
     # create_lr_ensembles()
     # create_nn_ensembles()
 
-    # xm = xception(model_name=name, trainable_base_layers=10, resolution=600, transformation_ratio=0.1, seed=4099)
-    # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
-    # data_dir = 'F:\\DDSM data\\pngs'
+    # name="xception_cropped_100"
+    # xm = BaseModel(model_name=name, trainable_base_layers=10, resolution=100, transformation_ratio=0, seed=4099, model_dir="pre_trained_models")
+    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    # data_dir = 'F:\\DDSM data\\cropped_pngs'
     # xm.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # xm.make_model(True, False)
+    # xm.make_model(False, False)
     # xm.train()
     # evaluate(xm)
     # xm.save_preds("")
 
-
+    name = "mixed_nn_diverse_members"
+    mnn = MixedFF(model_name=name, resolution=600, transformation_ratio=0.1, seed=4099,
+                    preds_dir="diverse_ensemble_members",
+                    model_dir="mixed_models", mode="nn")
+    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
+    data_dir = 'F:\\DDSM data\\pngs'
+    mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
+    mnn.make_model(False)
+    mnn.train()
+    evaluate(mnn)
 
     # xm = MixedData(name)
     # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs")
