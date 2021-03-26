@@ -65,29 +65,37 @@ class BaseModel():
         f.write("transformation_ratio: " + str(self.transformation_ratio))
         f.close()
 
-    def make_model(self, load=False, extra_block=False):
+    def make_model(self, load=False, extra_block=False, pre_trained_model = None):
         # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
-        base_model = self.base_model(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        if extra_block:
-            # Top Model Block
-            x = base_model.output
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            # x = Conv2D(64, (3, 3))(x)
-            # x = Activation('relu')(x)
-            # x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Flatten()(x)
-            x = Dense(64)(x)
-            x = Activation('relu')(x)
-            x = Dropout(0.5)(x)
-            x = GlobalAveragePooling2D()(x)
+        if pre_trained_model is None:
+            base_model = self.base_model(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
         else:
-            x = base_model.output
-            x = GlobalAveragePooling2D()(x)
+            base_model = keras.models.load_model(pre_trained_model)
+        if extra_block:
+            input = Input(shape=(self.img_width, self.img_height, 3))
+            x = Conv2D(16, (7, 7),
+                                  activation='relu',
+                                  padding='same')(input)
+
+            x =Conv2D(16, (7, 7),
+                                  activation='relu',
+                                  padding='same')(x)
+
+            x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+
+            x = Conv2D(32, (5, 5),
+                                  activation='relu',
+                                  padding='same')(x)
+
+            x = Conv2D(32, (5, 5),
+                                  activation='relu',
+                                  padding='same')(x)
+
+            x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+            base_model = base_model(x)
+
+        x = base_model.output
+        x = GlobalAveragePooling2D()(x)
 
         predictions = Dense(self.nb_classes, activation='softmax')(x)
 
@@ -149,6 +157,11 @@ class BaseModel():
                                                                                  self.train_generator.classes),
                                                                              y=self.train_generator.classes)))
             self.test_classes = self.test_generator.classes
+            # self.test_images_list = self.absoluteFilePaths(test_data_dir)
+            self.train_generator.classes.dump("./classes/training_classes.npy")
+            self.validation_generator.classes.dump("./classes/val_classes.npy")
+            self.test_generator.classes.dump("./classes/test_classes.npy")
+
 
     def train(self):
 

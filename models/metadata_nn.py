@@ -13,21 +13,21 @@ import datetime
 from tensorflow.keras.utils import to_categorical
 import tensorflow as tf
 import random
+import pandas as pd
+from tensorflow import keras
+from tensorflow.keras.models import load_model
 
 
-class FfEnsemble:
+class MetadataNN:
 
-    def __init__(self, model_name=None, members=None, seed = 4099, preds_dir = "ensemble_members", model_dir = "nn_ensembles", mode = "lr"):
-        self.preds_dir = preds_dir
+    def __init__(self, model_name=None, seed = 4099, model_dir = "metadata_nn"):
         self.model_dir = model_dir
-        self.members = members
-        self.mode=mode
-        self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
+        self.training_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", "all_training_metadata.csv")).drop(['label'], axis=1).astype('float32')
         self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
-        self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
+        self.val_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", "val_metadata.csv")).drop('label', axis=1).astype('float32')
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "val_classes.npy"), allow_pickle=True)
-        self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
-        self.test_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "test_classes.npy"), allow_pickle=True)
+        self.test_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", "all_test_metadata.csv")).drop('label', axis=1).astype('float32')[:363]
+        self.test_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "test_classes.npy"), allow_pickle=True)[:363]
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
         else:
@@ -40,36 +40,18 @@ class FfEnsemble:
         np.random.seed(seed)
         tf.random.set_seed(seed)
 
-    def load_preds(self, models, mode):
-        if self.members is None:
-            self.members = len(models)
-        else:
-            self.members = self.members
-        labels = []
-        for i in range(self.members):
-            m = models[i]
-            pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
-            predicts = pred_probas[:, 1]
-            # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
-            labels.append(predicts)
-            i += 1
-
-        # Ensemble with voting
-        labels = np.array(labels)
-        labels = np.transpose(labels, (1, 0))
-        return labels
 
     def make_model(self, load=False):
+        if load:
+            self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
+            return
         model = Sequential()
-        if self.mode=="nn":
-            nodes = self.members
-            if self.members == 9:
-                nodes= 10
-            model.add(Dense(nodes, input_dim=self.training_preds.shape[1], activation='relu'))
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(50, input_dim=self.training_metadata.shape[1], activation='relu'))
+        model.add(Dense(25, input_dim=10, activation='relu'))
+        model.add(Dense(5, input_dim=10, activation='relu'))
+        model.add(Dense(1, input_dim=self.training_metadata.shape[1], activation='sigmoid'))
         # Compile model
-
-        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', AUC(name="auc")])
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy', keras.metrics.AUC(name='auc')])
         if load:
             model.load_weights(self.top_weights_path)
         self.model = model
@@ -84,10 +66,10 @@ class FfEnsemble:
             EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
             CSVLogger(self.model_path + '/log.csv', append=True, separator=';'),
         ]
-        self.model.fit(self.training_preds, self.training_classes, epochs=200, validation_data=(self.val_preds, self.val_classes), verbose=0,
+        self.model.fit(self.training_metadata, self.training_classes, epochs=200, validation_data=(self.val_metadata, self.val_classes), verbose=1,
                   class_weight=class_weights,
                        callbacks=callbacks_list)
         self.model.save(self.model_path + "/" + self.name)
 
     def test_predict(self):
-        return to_categorical(self.model.predict(self.test_preds).round())
+        return to_categorical(self.model.predict(self.test_metadata).round())

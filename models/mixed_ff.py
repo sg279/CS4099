@@ -98,30 +98,47 @@ class MixedFF():
         # self.fix_model(ensemble_member_4, self.xception_model_last_block_layer_number)
         # ensemble_member_4 = ensemble_member_4(input)
 
-        mobilenet = MobileNetV2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        resnet = ResNet152V2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        inceptionresnet = InceptionResNetV2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        inception = InceptionV3(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        xception=Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        # mobilenet = MobileNetV2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        # resnet = ResNet152V2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        # inceptionresnet = InceptionResNetV2(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        # inception = InceptionV3(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
+        # xception=Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
 
-        mobilenet = self.make_member(mobilenet, self.mobilenet_model_last_block_layer_number,
-                                     os.path.join(os.getcwd(),".", "diverse_ensemble_members", "mobilenetv2", "top_model_weights.h5"), input)
-        resnet = self.make_member(resnet, self.resnet_model_last_block_layer_number,
-                                     os.path.join(os.getcwd(), ".", "diverse_ensemble_members", "resnet152v2",
-                                                  "top_model_weights.h5"), input)
-        inceptionresnet = self.make_member(inceptionresnet, self.inceptionresnet_model_last_block_layer_number,
-                                     os.path.join(os.getcwd(), ".", "diverse_ensemble_members", "inceptionresnetv2",
-                                                  "top_model_weights.h5"), input)
-        inception = self.make_member(inception, self.inception_model_last_block_layer_number,
-                                     os.path.join(os.getcwd(), ".", "diverse_ensemble_members", "inceptionv3",
-                                                  "top_model_weights.h5"), input)
-        xception = self.make_member(xception, self.xception_model_last_block_layer_number,
-                                     os.path.join(os.getcwd(), ".", "diverse_ensemble_members", "xception",
-                                                  "top_model_weights.h5"), input)
-        # z = concatenate([ensemble_member_0, ensemble_member_1, ensemble_member_2
-        #                            , ensemble_member_3, ensemble_member_4
-        #                         ])
-        z = concatenate([xception, mobilenet, resnet, inceptionresnet, inception])
+        # mobilenet = self.make_member(mobilenet, self.mobilenet_model_last_block_layer_number,
+        #                              os.path.join(os.getcwd(),".", "diverse_model_tests", "mobilenetV2", "top_model_weights.h5"), input)
+        # resnet = self.make_member(resnet, self.resnet_model_last_block_layer_number,
+        #                              os.path.join(os.getcwd(), ".", "diverse_model_tests", "resnet152V2",
+        #                                           "top_model_weights.h5"), input)
+        # inceptionresnet = self.make_member(inceptionresnet, self.inceptionresnet_model_last_block_layer_number,
+        #                              os.path.join(os.getcwd(), ".", "diverse_model_tests", "inceptionresnetV2",
+        #                                           "top_model_weights.h5"), input)
+        # inception = self.make_member(inception, self.inception_model_last_block_layer_number,
+        #                              os.path.join(os.getcwd(), ".", "diverse_model_tests", "inceptionV3",
+        #                                           "top_model_weights.h5"), input)
+        # xception = self.make_member(xception, self.xception_model_last_block_layer_number,
+        #                              os.path.join(os.getcwd(), ".", "diverse_model_tests", "xception",
+        #                                           "top_model_weights.h5"), input)
+
+        ensemble_member_0 = keras.models.load_model(os.path.join(os.getcwd(),".", "diverse_model_tests", "mobilenetV2", "mobilenetV2"))
+        self.fix_model(ensemble_member_0, self.xception_model_last_block_layer_number)
+        ensemble_member_0 = ensemble_member_0(input)
+        ensemble_member_1 = keras.models.load_model(os.path.join(os.getcwd(),".", "diverse_model_tests", "resnet152V2", "resnet152V2"))
+        self.fix_model(ensemble_member_1, self.xception_model_last_block_layer_number)
+        ensemble_member_1 = ensemble_member_1(input)
+        ensemble_member_2 = keras.models.load_model(os.path.join(os.getcwd(),".", "diverse_model_tests", "inceptionresnetV2", "inceptionresnetV2"))
+        self.fix_model(ensemble_member_2, self.xception_model_last_block_layer_number)
+        ensemble_member_2 = ensemble_member_2(input)
+        ensemble_member_3 = keras.models.load_model(os.path.join(os.getcwd(),".", "diverse_model_tests", "inceptionV3", "inceptionV3"))
+        self.fix_model(ensemble_member_3, self.xception_model_last_block_layer_number)
+        ensemble_member_3 = ensemble_member_3(input)
+        ensemble_member_4 = keras.models.load_model(os.path.join(os.getcwd(),".", "diverse_model_tests", "xception", "xception"))
+        self.fix_model(ensemble_member_4, self.xception_model_last_block_layer_number)
+        ensemble_member_4 = ensemble_member_4(input)
+
+        z = concatenate([ensemble_member_0, ensemble_member_1, ensemble_member_2
+                                   , ensemble_member_3, ensemble_member_4
+                                ])
+        # z = concatenate([xception, mobilenet, resnet, inceptionresnet, inception])
         if self.mode=="nn":
             z = Dense(10, activation="relu")(z)
         z = Dense(self.nb_classes, activation="sigmoid")(z)
@@ -160,10 +177,6 @@ class MixedFF():
 
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir, make=True):
-        self.training_classes = np.load(
-            os.path.join(os.getcwd(), ".", self.preds_dir, "classes", "training_classes.npy"))
-        self.val_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "val_classes.npy"))
-        self.test_classes = np.load(os.path.join(os.getcwd(), ".",self.preds_dir, "classes", "test_classes.npy"))
         self.train_data_dir, self.validation_data_dir, self.test_data_dir = train_data_dir, validation_data_dir, test_data_dir
         if make:
             train_datagen = ImageDataGenerator(rescale=1. / 255,
@@ -209,10 +222,12 @@ class MixedFF():
                                                                                  self.train_generator.classes),
                                                                              y=self.train_generator.classes)))
             self.test_classes = self.test_generator.classes
+            self.training_classes = self.train_generator.classes
+            self.val_classes = self.validation_generator.classes
+
 
     def train(self):
 
-        # top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         callbacks_list = [
             ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
             EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
