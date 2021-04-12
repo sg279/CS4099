@@ -2,62 +2,49 @@ import pandas as pd
 from PIL import Image
 import os
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from tensorflow.keras.losses import CategoricalCrossentropy
-from tensorflow.keras.metrics import CategoricalAccuracy
-from tensorflow.keras.layers import *
-from tensorflow.keras.optimizers import *
 from tensorflow.keras.applications import *
-from tensorflow.keras.models import Model
-from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
-from tensorflow.keras import backend as k
 from matplotlib import pyplot as plt
 import numpy as np
-from sklearn.utils import class_weight
 from models.base_model import BaseModel
 from models.mixed_data import MixedData, Metadata, Metadata_ensemble
 from models.expert_ensemble import ExpertEnsemble
 from models.ff_ensemble import FfEnsemble
-from models.mixed_ff import MixedFF
-from models.mixed_model import MixedModel, MixedModelPretrained
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 import random
 from models.metadata_nn import MetadataNN
 
-
-def evaluate(model, tuning=False):
+'''
+This method takes a model as a parameter and calls its test predict method to get the test data results, and 
+saves various metrics and the ROC AUC curve
+'''
+def evaluate(model, modifier=""):
     Y_pred = model.test_predict()
     y_pred = np.argmax(Y_pred, axis=1)
-    tuning_string = ""
-    if tuning:
-        tuning_string = "tuning_"
     print('Confusion Matrix')
     print(confusion_matrix(model.test_classes, y_pred))
     print('Classification Report')
-    f = open(os.path.join(model.model_path, tuning_string + "mass_results.txt"), 'w')
+    f = open(os.path.join(model.model_path,modifier+"results.txt"), 'w')
     f.write('Confusion Matrix\n')
-    f.write(str(confusion_matrix(model.test_classes, y_pred)) + "\n")
+    f.write(str(confusion_matrix(model.test_classes, y_pred))+"\n")
     f.write('Classification Report\n')
 
     target_names = ['B', 'M']
     print(classification_report(model.test_classes, y_pred, target_names=target_names))
-    f.write(classification_report(model.test_classes, y_pred, target_names=target_names) + "\n")
+    f.write(classification_report(model.test_classes, y_pred, target_names=target_names)+"\n")
 
     fpr, tpr, _ = roc_curve(model.test_classes, y_pred)
     roc_auc = auc(fpr, tpr)
 
-    f.write("FPR: " + str(fpr) + " TPR: " + str(tpr) + " AUC: " + str(roc_auc) + "\n")
-    fn, tn = 0, 0
+    f.write("FPR: "+str(fpr)+ " TPR: "+str(tpr)+ " AUC: "+str(roc_auc)+"\n")
+    fn, tn = 0,0
     for i in range(len(y_pred)):
-        if y_pred[i] == 0 and model.test_classes[i] == 0:
-            tn = tn + 1
-        if y_pred[i] == 0 and model.test_classes[i] == 1:
-            fn = fn + 1
-    fnr = fn / len(y_pred)
-    tnr = tn / len(y_pred)
-    f.write("FNR: " + str(fnr) + " TNR: " + str(tnr) + "\n")
+        if y_pred[i]==0 and model.test_classes[i] ==0:
+            tn = tn+1
+        if y_pred[i]==0 and model.test_classes[i] ==1:
+            fn = fn+1
+    fnr = fn/len(y_pred)
+    tnr=tn/len(y_pred)
+    f.write("FNR: " + str(fnr) + " TNR: " + str(tnr)+"\n")
 
     f.close()
     plt.figure()
@@ -71,9 +58,12 @@ def evaluate(model, tuning=False):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic example')
     plt.legend(loc="lower right")
-    plt.savefig(model.model_path + "/" + tuning_string + "AUC.png")
+    # plt.savefig(model.model_path + "/AUC.png")
     # plt.show()
 
+'''
+These scripts are used for training collections of models with a single method call and have no bearing on functionality
+'''
 
 def train_members():
     for i in range(1, 8):
@@ -125,7 +115,6 @@ def create_mixed_data_ensembles():
         evaluate(md)
         # xm.save_preds("")
 
-
 def create_voting_ensembles():
     members = [3, 5, 7, 9]
     for m in members:
@@ -135,7 +124,6 @@ def create_voting_ensembles():
         voting.val_predict()
         evaluate(voting)
 
-
 def create_average_ensembles():
     members = [3, 5, 7, 9]
     for m in members:
@@ -144,7 +132,6 @@ def create_average_ensembles():
                              preds_dir="parameter_gridsearch_members", mode="average")
         avg.val_predict()
         evaluate(avg)
-
 
 def create_lr_ensembles():
     members = [3, 5, 7, 9]
@@ -156,7 +143,6 @@ def create_lr_ensembles():
         lr.train()
         evaluate(lr)
 
-
 def create_nn_ensembles():
     members = [3, 5, 7, 9]
     for m in members:
@@ -166,7 +152,6 @@ def create_nn_ensembles():
         nn.make_model()
         nn.train()
         evaluate(nn)
-
 
 def parameter_gridsearch():
     resolutions = [800]
@@ -188,15 +173,13 @@ def parameter_gridsearch():
                 evaluate(model)
                 model.save_preds()
 
-
 def create_diverse_models():
     models = [
-        # [Xception, "xception", 126, 600],
-        # [MobileNetV2, "mobilenetV2", 88, 224],
-        # [InceptionV3, "inceptionV3", 159, 400],
-        # [InceptionResNetV2, "inceptionresnetV2", 572, 300],
+        [Xception, "xception", 126, 600],
+        [MobileNetV2, "mobilenetV2", 88, 224],
+        [InceptionV3, "inceptionV3", 159, 400],
+        [InceptionResNetV2, "inceptionresnetV2", 572, 300],
         [ResNet152V2, "resnet152V2", 564, 500]
-        #   [VGG19, "vgg19", 26]
     ]
     for m in models:
         name = m[1]
@@ -217,120 +200,7 @@ def main():
     random.seed(4099)
     np.random.seed(4099)
     tf.random.set_seed(4099)
-    name = "metadata_nn_deeper"
-    # nn = NnEnsemble(model_name=name, members=m, nodes=10, model_dir="nn_gridsearch_ensemble", preds_dir="parameter_gridsearch")
-    nn = MetadataNN(model_name=name)
-    nn.make_model(True)
-    # nn.train()
-    evaluate(nn)
-    # create_voting_ensembles()
-    # create_average_ensembles()
-    # create_lr_ensembles()
-    # create_nn_ensembles()
-    # name = "metadata_nn_no_assessment_or_subtlety"
-    # mnn = MetadataNN(model_name=name)
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    # train_metadata_members()
-
-    # name = "metadata_test_no_assessment_concat_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                 model_dir="metadata_search", concat_metadata=True, metadata_prefix="no_assessment_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    # name = "metadata_test_no_assessment_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=False, metadata_prefix="no_assessment_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    #
-    # name = "metadata_test_no_assessment_subtlety_concat_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=True, metadata_prefix="no_assessment_subtlety_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    # name = "metadata_test_no_assessment_subtlety_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=False, metadata_prefix="no_assessment_subtlety_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    #
-    # name = "metadata_test_all_concat_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=True, metadata_prefix="all_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    # name = "metadata_test_all_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=False, metadata_prefix="all_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-
-
-
-    # name = "metadata_ensemble_test_no_radiologist_model"
-    # mnn = Metadata_ensemble(model_name=name, resolution=400, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                         model_dir="metadata_search", concat_metadata=True, metadata_prefix="no_radiologist_",
-    #                         members=5, preds_dir="ensemble_members")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(True)
-    # # mnn.train()
-    # evaluate(mnn)
-
-    # name = "metadata_ensemble_test_all_features"
-    # mnn = Metadata_ensemble(model_name=name, resolution=400, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                         model_dir="metadata_search", concat_metadata=True, metadata_prefix="all_",
-    #                         members=5, preds_dir="ensemble_members")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
-    # name = "metadata_test_no_radiologist_metadata"
-    # mnn = Metadata(model_name=name, resolution=800, transformation_ratio=0, trainable_base_layers=5, seed=4099,
-    #                model_dir="metadata_search", concat_metadata=False, metadata_prefix="no_radiologist_")
-    # # data_dir = os.path.join("..","..","..","..","..","data","sg279", "DDSM data", "pngs_corrected")
-    # data_dir = 'F:\\DDSM data\\pngs'
-    # mnn.make_generators(os.path.join(data_dir, "train"), os.path.join(data_dir, "val"), os.path.join(data_dir, "test"))
-    # mnn.make_model(False)
-    # mnn.train()
-    # evaluate(mnn)
 
 
 if __name__ == '__main__':
-    # mias_conversion("val")
-    # mias_conversion("train")
-    # mias_conversion("test")
-    # print(os.getcwd())
-    # np.seterr(all='raise')
     main()
-
-    # train(".\mias\\train", ".\mias\\val",".\mias\\test", ".\\")

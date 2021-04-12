@@ -10,6 +10,10 @@ import os
 # import numpy as np
 # from sklearn.utils import class_weight
 
+'''
+These scripts were used for compiling results and have no impact on functionality
+'''
+
 
 def distort_images():
     datagen = ImageDataGenerator(zoom_range=0.7
@@ -51,7 +55,7 @@ def get_aucs(dir):
             df = df.append(pd.Series({'model':m, 'max_val_auc':round(max(aucs),4), 'test_auc': test_auc}), ignore_index=True)
     # df=df.head(9)
     # df = df.sort_values("max_val_auc", ascending=False)
-    df.to_csv("./mixed_data_heterogenous_ensemble_results.csv", index=False)
+    df.to_csv("./mass_ensemble_members.csv", index=False)
     return df
 
 def eval_diverse_ensembles(dir):
@@ -110,7 +114,8 @@ def get_preds():
 
 
 if __name__ == '__main__':
-    get_aucs("mixed_data_heterogenous_ensembles")
+    # get_aucs("trained_models_and_ensembles/calc_ensemble_members")
+    get_aucs("trained_models_and_ensembles/mass_ensemble_members")
     # get_aucs("metadata_search")
     # get_aucs("diverse_model_ensembles")
     # eval_ensembles()

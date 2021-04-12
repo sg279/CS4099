@@ -22,7 +22,9 @@ import random
 import math
 from tensorflow.keras.models import load_model
 
-
+"""
+This class is created to implement ensembles combined with a newly trained CNN
+"""
 class MixedData():
 
     def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, members = None,
@@ -30,39 +32,47 @@ class MixedData():
         self.preds_dir = preds_dir
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
-        self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
-        self.batch_size = 16  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
-        self.nb_epoch = 50  # number of iteration the algorithm gets trained.
-        self.learn_rate = 1e-4  # sgd learning rate
-        self.momentum = .9  # sgd momentum to avoid local minimum
+        # The number of pre trained layers in the base model (always an xception model)
+        self.based_model_last_block_layer_number = 126
+        # Resolution of iamges for training
+        self.img_width, self.img_height = resolution, resolution
+        # Adjusted based on image resolution and model complexity
+        self.batch_size = 16
+        # Maximum number of epochs
+        self.nb_epoch = 50
+        # How much images are transformed before being fed to the model
         self.transformation_ratio = transformation_ratio
+        # How many of the last pre trained layers can have weights adjusted
         self.trainable_base_layers = trainable_base_layers
+        # Allows for repeatability of results
         self.seed = seed
+        # Number of members in the ensemble
         self.members = members
         if model_name is None:
-            self.name = datetime.datetime.now().strftime('%d-%m-%y')
+            self.name = datetime.datetime.now().strftime("%d-%m-%y")
         else:
-            # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
-        # os.mkdir(".\\" + self.name)
         self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
-
         os.makedirs(self.model_path, exist_ok=True)
-        # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
-        self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
-        self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
-        self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
+        # Where the model weights that achieve highest val AUC are stored
+        self.top_weights_path = os.path.join(
+            os.path.abspath(self.model_path), "top_model_weights.h5"
+        )
+        self.tensorboard_path = os.path.join(
+            os.path.abspath(self.model_path), "tensorboard"
+        )
         os.makedirs(self.tensorboard_path, exist_ok=True)
         self.save_hyper_parameters()
         random.seed(seed)
         np.random.seed(seed)
         tf.random.set_seed(seed)
-        self.i=0
+        # Counter for loading predictions
+        self.i = 0
 
-
+    """
+    Store the model's hyper parameters
+    """
     def save_hyper_parameters(self):
-        # f = open(self.model_path+"/hyper_parameters.txt", 'w')
         f = open(os.path.join(self.model_path, "hyper_parameters.txt"), 'w')
         f.write("based_model_last_block_layer_number: "+str(self.based_model_last_block_layer_number)+"\n")
         f.write("img_width: " + str(self.img_width)+"\n")
@@ -74,101 +84,80 @@ class MixedData():
         f.write("transformation_ratio: " + str(self.transformation_ratio))
         f.close()
 
-    def make_model(self, load=False, extra_block=False):
-        # if load:
-        #     self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
-        #     return
-        # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
-        base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        if extra_block:
-            # Top Model Block
-            x = base_model.output
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            # x = Conv2D(64, (3, 3))(x)
-            # x = Activation('relu')(x)
-            # x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Flatten()(x)
-            x = Dense(64)(x)
-            x = Activation('relu')(x)
-            x = Dropout(0.5)(x)
-            x = GlobalAveragePooling2D()(x)
-        else:
-            x = base_model.output
-            x = GlobalAveragePooling2D()(x)
-
-        predictions = Dense(self.nb_classes, activation='softmax')(x)
-
-        # add your top layer block to your base model
+    def make_model(self, load=False):
+        # Load the pre trained model from keras
+        base_model = Xception(
+            input_shape=(self.img_width, self.img_height, 3),
+            weights="imagenet",
+            include_top=False,
+        )
+        x = base_model.output
+        # Create the final pooling and prediction layers
+        x = GlobalAveragePooling2D()(x)
+        predictions = Dense(self.nb_classes, activation="softmax")(x)
+        # Add pooling and predictions to base model
         x = Model(base_model.input, predictions)
+        # Set the required number of base layers to untrainable
         for layer in base_model.layers[:self.based_model_last_block_layer_number-self.trainable_base_layers]:
             layer.trainable = False
-        # y = Sequential()
-        # y.add(Dense(10, input_dim=self.training_preds.shape[1], activation='relu'))
-        # y.add(Dense(1, activation='sigmoid'))
+        # Define the input for receiving member predictions
         preds = Input(shape=(self.members, ))
-        # combined = concatenate([x.output, y.output])
+        # Concatenate the output of the new CNN with predictions from members
         combined = concatenate([x.output, preds])
+        # Add dense layers to learn from the outputs of the new CNN and member models
         z = Dense(10, activation="relu")(combined)
         z = Dense(5, activation="relu")(z)
         z = Dense(self.nb_classes, activation="softmax")(z)
+        # Create the model with the input to the new CNN and member predictions as inputs
         model = Model(inputs=[x.input, preds], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
                       metrics=['accuracy', keras.metrics.AUC(name='auc')])
+        # If using a trained model restore weights
         if load:
             model.load_weights(self.top_weights_path)
-            # model = load_model(os.path.join(self.model_path, self.name))
         self.model = model
 
-
-    def custom_generator(self, images_list, preds, classes, batch_size, data_gen_args, test):
-        # i = 0
+    """
+    A custom data generator to be used when training the model that generates batches of 
+    images and member predictions made on the image
+    """
+    def custom_generator(self, images_list, preds, classes, batch_size, data_gen_args):
+        # Reset the counter
         self.i=0
         datagen = ImageDataGenerator()
+        # List of indexes that set the order of which images and predictions are included in batches
         indexes = list(range(0, len(images_list)))
-        if not test:
-            random.shuffle(indexes)
+        random.shuffle(indexes)
+        # While true is used for data generators
         while True:
             batch = {'images': [], 'preds': [], 'labels': []}
             for b in range(batch_size):
-                try:
-                    if self.i == len(images_list):
-                        self.i = 0
-                        if not test:
-                            random.shuffle(indexes)
-                    # Read image from list and convert to array
-                    image_path = images_list[indexes[self.i]]
-                    image = load_img(image_path, target_size=(self.img_height, self.img_width))
-                    image = datagen.apply_transform(image, data_gen_args)
-                    image = img_to_array(image)
-
-                    # Read data from csv using the name of current image
-                    yield_preds = preds[indexes[self.i], :]
-                    label = classes[indexes[self.i]]
-                    batch['images'].append(image)
-                    batch['preds'].append(yield_preds)
-                    batch['labels'].append(label)
-                    self.i += 1
-                except:
-                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list)))
-                    print(indexes)
-                    random.shuffle(indexes)
+                # If the end of the image list is reached reset counter and shuffle indexes
+                if self.i == len(images_list):
                     self.i = 0
-                    b=b-1
-
+                    random.shuffle(indexes)
+                # Load image at selected index and apply transformations
+                image_path = images_list[indexes[self.i]]
+                image = load_img(image_path, target_size=(self.img_height, self.img_width))
+                image = datagen.apply_transform(image, data_gen_args)
+                image = img_to_array(image)
+                # Get the prediction and label at the selected index
+                yield_preds = preds[indexes[self.i], :]
+                label = classes[indexes[self.i]]
+                batch['images'].append(image)
+                batch['preds'].append(yield_preds)
+                batch['labels'].append(label)
+                self.i += 1
+            # Format batch for being fed to model
             batch['images'] = np.array(batch['images'])
             batch['preds'] = np.array(batch['preds'])
             # Convert labels to categorical values
             batch['labels'] = np.eye(self.nb_classes)[batch['labels']]
             yield [batch['images'], batch['preds']], batch['labels']
 
+    # Load either train, validation, or test predictions for each member
     def load_preds(self, models, mode):
-
         if self.members is None:
             self.members = len(models)
         labels = []
@@ -176,15 +165,13 @@ class MixedData():
             m = models[i]
             pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
             predicts = pred_probas[:, 1]
-            # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
             labels.append(predicts)
             i += 1
-
-        # Ensemble with voting
         labels = np.array(labels)
         labels = np.transpose(labels, (1, 0))
         return labels
 
+    # Get the absolute file paths of all files in a directory
     def absoluteFilePaths(self, directory):
         files = []
         for dirpath, _, filenames in os.walk(directory):
@@ -193,13 +180,14 @@ class MixedData():
         return files
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
+        # Load member predictions and training, test, and validation data classes
         self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
         self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
         self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "val_classes.npy"), allow_pickle=True)
         self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
         self.test_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "test_classes.npy"), allow_pickle=True)
-
+        # Train and validation generators use transformations
         tv_args = dict(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
                                            shear_range=self.transformation_ratio,
@@ -207,175 +195,131 @@ class MixedData():
                                            cval=self.transformation_ratio,
                                            horizontal_flip=True,
                                            vertical_flip=True)
-        test_args = dict(rescale=1. / 255)
-        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir), self.training_preds, self.training_classes, self.batch_size, tv_args, False)
-        print("image list length: "+str(len(self.absoluteFilePaths(train_data_dir)))+"preds shape: "+str(self.training_preds.shape[0])+" classes: "+str(len(self.training_classes)))
-        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_preds, self.val_classes, self.batch_size, tv_args, False)
-        print("image list length: "+str(len(self.absoluteFilePaths(validation_data_dir)))+"preds shape: "+str(self.val_preds.shape[0])+" classes: "+str(len(self.val_classes)))
-        self.test_generator = self.custom_generator(self.absoluteFilePaths(test_data_dir), self.test_preds, self.test_classes, self.batch_size, test_args, True)
-        print("image list length: "+str(len(self.absoluteFilePaths(test_data_dir)))+"preds shape: "+str(self.test_preds.shape[0])+" classes: "+str(len(self.test_classes)))
-        self.class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
+        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir), self.training_preds, self.training_classes, self.batch_size, tv_args)
+        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_preds, self.val_classes, self.batch_size, tv_args)
         self.test_images_list = self.absoluteFilePaths(test_data_dir)
 
+    """
+    Train the class's model object using the train and validation generators
+    """
     def train(self):
-
-        # top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
+        # Create callbacks for use during training. Checkpoint on val AUC improvement and early stop after 5 epochs
+        # of no improvement. Also defines saving tensorboards and logging training to CSV
         callbacks_list = [
-            ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
-            EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
-            CSVLogger(self.model_path+'/log.csv', append=True, separator=';'),
-            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size/4))
+            ModelCheckpoint(
+                self.top_weights_path,
+                monitor="val_auc",
+                verbose=1,
+                save_best_only=True,
+                mode="max",
+            ),
+            EarlyStopping(
+                monitor="val_auc",
+                patience=5,
+                verbose=0,
+                restore_best_weights=True,
+                mode="max",
+            ),
+            CSVLogger(self.model_path + "/log.csv", append=True, separator=";"),
+            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size / 4)),
         ]
-        class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
-        # Train Simple CNN
-        self.model.fit_generator(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch,
-                  callbacks=callbacks_list,
-                  class_weight=class_weights, steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size), validation_steps=math.ceil(len(self.val_classes)/self.batch_size))
-        self.model.save(self.model_path+"/"+self.name)
+        # Calculate class weights for balancing
+        class_weights = dict(
+            enumerate(
+                class_weight.compute_class_weight(
+                    "balanced",
+                    classes=np.unique(self.training_classes),
+                    y=self.training_classes,
+                )
+            )
+        )
+        # Train the model and save
+        self.model.fit(
+            self.train_generator,
+            validation_data=self.validation_generator,
+            epochs=self.nb_epoch,
+            callbacks=callbacks_list,
+            class_weight=class_weights,
+            steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size),
+            validation_steps=math.ceil(len(self.val_classes)/self.batch_size)
+        )
+        self.model.save(self.model_path + "/" + self.name)
 
-    def tune(self):
-        self.model.load_weights(self.top_weights_path)
-
-        # based_model_last_block_layer_number points to the layer in your model you want to train.
-        # For example if you want to train the last block of a 19 layer VGG16 model this should be 15
-        # If you want to train the last Two blocks of an Inception model it should be 172
-        # layers before this number will used the pre-trained weights, layers above and including this number
-        # will be re-trained based on the new data.
-        for layer in self.model.layers[:self.based_model_last_block_layer_number]:
-            layer.trainable = False
-        for layer in self.model.layers[self.based_model_last_block_layer_number:]:
-            layer.trainable = True
-
-        # compile the model with a SGD/momentum optimizer
-        # and a very slow learning rate.
-        # self.model.compile(optimizer='nadam',
-        #               loss='categorical_crossentropy',
-        #               metrics=['accuracy'])
-
-        callbacks_list = [
-            ModelCheckpoint(self.final_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
-            EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
-            CSVLogger(self.model_path + '/tuning_log.csv', append=True, separator=';')
-        ]
-
-        # fine-tune the model
-        self.model.fit(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch, callbacks=callbacks_list,
-                  class_weight=self.class_weights)
-        self.model.save(self.model_path+"/"+self.name+"_tuned")
-
-    def test(self):
-        Y_pred = self.model.predict(self.test_generator, self.test_generator.samples // self.batch_size + 1)
-        y_pred = np.argmax(Y_pred, axis=1)
-        print('Confusion Matrix')
-        print(confusion_matrix(self.test_generator.classes, y_pred))
-        print('Classification Report')
-        target_names = ['B', 'M', 'N']
-        print(classification_report(self.test_generator.classes, y_pred, target_names=target_names))
-
+    """
+    Return the predictions made on the test data
+    """
     def test_predict(self):
         datagen = ImageDataGenerator()
         preds = None
         data_gen_args = dict(rescale=1. / 255)
+        # Iterate through test data
         for i in range(len(self.test_classes)):
             print(str(i)+"/"+str(len(self.test_classes)))
+            # Load image
             image_path = self.test_images_list[i]
             image = load_img(image_path, target_size=(self.img_height, self.img_width))
             image = datagen.apply_transform(image, data_gen_args)
             image = img_to_array(image)
+            # Add the model predictions on the image and test data predictions to an array
             if preds is None:
                 preds = self.model.predict([np.array([image]), np.array([self.test_preds[i, :]])])
             else:
                 preds = np.append(preds, self.model.predict([np.array([image]), np.array([self.test_preds[i, :]])]), axis=0)
 
         return preds
-        # return self.model.predict(self.train_generator, steps=math.ceil(len(self.test_classes)/self.batch_size), verbose=1).round()[:len(self.test_classes)]
 
-    def save_preds(self, tuning):
-
-        train_datagen = ImageDataGenerator(rescale=1. / 255
-                                           )
-
-        validation_datagen = ImageDataGenerator(rescale=1. / 255
-                                                )
-
-        test_datagen = ImageDataGenerator(rescale=1. / 255)
-        train_generator = train_datagen.flow_from_directory(self.train_data_dir,
-                                                            target_size=(self.img_width, self.img_height),
-                                                            batch_size=self.batch_size,
-                                                            class_mode='categorical'
-                                                            ,shuffle=False
-                                                            )
-
-        validation_generator = validation_datagen.flow_from_directory(self.validation_data_dir,
-                                                                      target_size=(self.img_width, self.img_height),
-                                                                      batch_size=self.batch_size,
-                                                                      class_mode='categorical'
-                                                                      ,shuffle=False
-                                                                      )
-
-        test_generator = test_datagen.flow_from_directory(self.test_data_dir,
-                                                          target_size=(self.img_width, self.img_height),
-                                                          batch_size=self.batch_size,
-                                                          class_mode='categorical',shuffle=False)
-        os.makedirs(os.path.join(self.model_path,"training_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"validation_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"test_preds"), exist_ok=True)
-        pred_probas = self.model.predict(train_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"training_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(validation_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"validation_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(test_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"test_preds",self.name+tuning), pred_probas)
-
+"""
+This class trains a base model and layers on top of the base model output and metadata for the images being used
+"""
 class Metadata():
 
     def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099,
-                 model_dir = "mixed_data_ensembles", concat_metadata = False, metadata_prefix = ""):
+                 model_dir = "mixed_data_ensembles", same_level_metadata = False, metadata_prefix = ""):
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
-        self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
-        self.batch_size = 8  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
-        self.nb_epoch = 50  # number of iteration the algorithm gets trained.
-        self.learn_rate = 1e-4  # sgd learning rate
-        self.momentum = .9  # sgd momentum to avoid local minimum
+        # The number of pre trained layers in the base model (always an xception model)
+        self.based_model_last_block_layer_number = 126
+        # Resolution of iamges for training
+        self.img_width, self.img_height = resolution, resolution
+        # Adjusted based on image resolution and model complexity
+        self.batch_size = 16
+        # Maximum number of epochs
+        self.nb_epoch = 50
+        # How much images are transformed before being fed to the model
         self.transformation_ratio = transformation_ratio
+        # How many of the last pre trained layers can have weights adjusted
         self.trainable_base_layers = trainable_base_layers
+        # Allows for repeatability of results
         self.seed = seed
+        # Used for fetching correct metadata
         self.metadata_prefix = metadata_prefix
+        # Whether to combine all metadata features with the base model or a prediction made on metadata
+        self.same_level_metadata = same_level_metadata
         if model_name is None:
-            self.name = datetime.datetime.now().strftime('%d-%m-%y')
+            self.name = datetime.datetime.now().strftime("%d-%m-%y")
         else:
-            # self.name = model_name+"_"+datetime.datetime.now().strftime('%d-%m-%y')
             self.name = model_name
-        # os.mkdir(".\\" + self.name)
-        self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
-
+        self.model_path = os.path.join(os.getcwd(), ".", model_dir, self.name)
         os.makedirs(self.model_path, exist_ok=True)
-        # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
-        self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
-        self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
-        self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
+        # Where the model weights that achieve highest val AUC are stored
+        self.top_weights_path = os.path.join(
+            os.path.abspath(self.model_path), "top_model_weights.h5"
+        )
+        self.tensorboard_path = os.path.join(
+            os.path.abspath(self.model_path), "tensorboard"
+        )
         os.makedirs(self.tensorboard_path, exist_ok=True)
         self.save_hyper_parameters()
-        self.concat_metadata = concat_metadata
         random.seed(seed)
         np.random.seed(seed)
         tf.random.set_seed(seed)
+        # Counter for loading predictions
         self.i=0
 
-
+    """
+    Store the model's hyper parameters
+    """
     def save_hyper_parameters(self):
-        # f = open(self.model_path+"/hyper_parameters.txt", 'w')
         f = open(os.path.join(self.model_path, "hyper_parameters.txt"), 'w')
         f.write("based_model_last_block_layer_number: "+str(self.based_model_last_block_layer_number)+"\n")
         f.write("img_width: " + str(self.img_width)+"\n")
@@ -388,132 +332,98 @@ class Metadata():
         f.close()
 
     def make_model(self, load=False, extra_block=False):
-        # if load:
-        #     self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
-        #     return
-        # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
+        # Load the pre trained xception model from keras
         base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-
-        if extra_block:
-            # Top Model Block
-            x = base_model.output
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            # x = Conv2D(64, (3, 3))(x)
-            # x = Activation('relu')(x)
-            # x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Flatten()(x)
-            x = Dense(64)(x)
-            x = Activation('relu')(x)
-            x = Dropout(0.5)(x)
-            x = GlobalAveragePooling2D()(x)
-        else:
-            x = base_model.output
-            x = GlobalAveragePooling2D()(x)
-
-        predictions = Dense(self.nb_classes, activation='softmax')(x)
-
-        # add your top layer block to your base model
+        x = base_model.output
+        # Create the final pooling and prediction layers
+        x = GlobalAveragePooling2D()(x)
+        predictions = Dense(self.nb_classes, activation="softmax")(x)
+        # Add pooling and predictions to base model
         x = Model(base_model.input, predictions)
-        x.load_weights("ensemble_members/0_ensemble_member_1/top_model_weights.h5")
-        for layer in x.layers:
+        # Set the required number of base layers to untrainable
+        for layer in base_model.layers[:self.based_model_last_block_layer_number - self.trainable_base_layers]:
             layer.trainable = False
-        # for layer in base_model.layers[:self.based_model_last_block_layer_number-self.trainable_base_layers]:
-        #     layer.trainable = False
-        if self.concat_metadata:
+        # If concatenating a single output with the base model prediction by adding layers
+        # on top of metadata inputs
+        if self.same_level_metadata:
             metadata = Sequential()
+            # If there are more than 20 metadata features add extra layers on top of metadata before
+            # combining with base model
             if self.training_metadata.shape[1] > 20:
                 metadata.add(Dense(50, input_dim=self.training_metadata.shape[1]-1, activation='relu'))
                 metadata.add(Dense(25, input_dim=10, activation='relu'))
                 metadata.add(Dense(5, input_dim=10, activation='relu'))
             else:
                 metadata.add(Dense(5, input_dim=self.training_metadata.shape[1]-1, activation='relu'))
+            # Add the prediction layer to the layers on top of metadata
             metadata.add(Dense(self.nb_classes, activation='sigmoid'))
+            # Concatenate with base model output and add final prediction layer
             combined = concatenate([x.output, metadata.output])
             z = Dense(self.nb_classes, activation="softmax")(combined)
+            # Create model with image and metadata inputs
             model = Model(inputs=[x.input, metadata.input], outputs=z)
-        # combined = concatenate([x.output, y.output])
-        if not self.concat_metadata:
+        # If all metadata features are being concatenated with the base model output
+        if not self.same_level_metadata:
+            # Create metadata input
             metadata = Input(shape=(self.training_metadata.shape[1] - 1,))
+            # Concatenate metadata with base model output
             z = concatenate([x.output, metadata])
+            # If there are more than 20 metadata features add extra layers on top of the metadata and base model
             if self.training_metadata.shape[1]>20:
                 z = Dense(50, activation="relu")(z)
                 z = Dense(25, activation="relu")(z)
             z = Dense(5, activation="relu")(z)
+            # Create final prediction layer
             z = Dense(self.nb_classes, activation="softmax")(z)
+            # Create model with image and metadata inputs
             model = Model(inputs=[x.input, metadata], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
                       metrics=['accuracy', keras.metrics.AUC(name='auc')])
+        # If using a trained model restore weights
         if load:
             model.load_weights(self.top_weights_path)
-            # model = load_model(os.path.join(self.model_path, self.name))
         self.model = model
 
-
-    def custom_generator(self, images_list, metadata, classes, batch_size, data_gen_args, test):
-        # i = 0
+    """
+    A custom data generator to be used when training the model that generates batches of 
+    images and metadata for the image
+    """
+    def custom_generator(self, images_list, metadata, classes, batch_size, data_gen_args):
+        # Reset the counter
         self.i=0
         datagen = ImageDataGenerator()
+        # List of indexes that set the order of which images and predictions are included in batches
         indexes = list(range(0, len(images_list)))
-        if not test:
-            random.shuffle(indexes)
+        random.shuffle(indexes)
+        # While true is used for data generators
         while True:
             batch = {'images': [], 'metadata': [], 'labels': []}
             for b in range(batch_size):
-                try:
-                    if self.i == len(images_list):
-                        self.i = 0
-                        if not test:
-                            random.shuffle(indexes)
-                    # Read image from list and convert to array
-                    image_path = images_list[indexes[self.i]]
-                    image = load_img(image_path, target_size=(self.img_height, self.img_width))
-                    image = datagen.apply_transform(image, data_gen_args)
-                    image = img_to_array(image)
-
-                    # Read data from csv using the name of current image
-                    yield_metadata = np.array(metadata.loc[indexes[self.i]].drop('label'))
-                    label = classes[indexes[self.i]]
-                    batch['images'].append(image)
-                    batch['metadata'].append(yield_metadata)
-                    batch['labels'].append(label)
-                    self.i += 1
-                except:
-                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list)))
-                    print(indexes)
-                    random.shuffle(indexes)
+                # If the end of the image list is reached reset counter and shuffle indexes
+                if self.i == len(images_list):
                     self.i = 0
-                    b=b-1
-
+                    random.shuffle(indexes)
+                # Load image at selected index and apply transformations
+                image_path = images_list[indexes[self.i]]
+                image = load_img(image_path, target_size=(self.img_height, self.img_width))
+                image = datagen.apply_transform(image, data_gen_args)
+                image = img_to_array(image)
+                # Get the metadata and label at the selected index
+                yield_metadata = np.array(metadata.loc[indexes[self.i]].drop('label'))
+                label = classes[indexes[self.i]]
+                batch['images'].append(image)
+                batch['metadata'].append(yield_metadata)
+                batch['labels'].append(label)
+                self.i += 1
+            # Format batch for being fed to model
             batch['images'] = np.array(batch['images'])
             batch['metadata'] = np.array(batch['metadata'])
             # Convert labels to categorical values
             batch['labels'] = np.eye(self.nb_classes)[batch['labels']]
             yield [batch['images'], batch['metadata']], batch['labels']
 
-    def load_preds(self, models, mode):
-
-        if self.members is None:
-            self.members = len(models)
-        labels = []
-        for i in range(self.members):
-            m = models[i]
-            pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
-            predicts = pred_probas[:, 1]
-            # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
-            labels.append(predicts)
-            i += 1
-
-        # Ensemble with voting
-        labels = np.array(labels)
-        labels = np.transpose(labels, (1, 0))
-        return labels
-
+    # Get the absolute file paths of all files in a directory
     def absoluteFilePaths(self, directory):
         files = []
         for dirpath, _, filenames in os.walk(directory):
@@ -522,13 +432,14 @@ class Metadata():
         return files
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
+        # Load metadata and training, test, and validation data classes
         self.training_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"training_metadata.csv"))
         self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
         self.val_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"val_metadata.csv"))
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "val_classes.npy"), allow_pickle=True)
         self.test_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"test_metadata.csv"))
         self.test_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "test_classes.npy"), allow_pickle=True)
-
+        # Train and validation generators use transformations
         tv_args = dict(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
                                            shear_range=self.transformation_ratio,
@@ -536,123 +447,107 @@ class Metadata():
                                            cval=self.transformation_ratio,
                                            horizontal_flip=True,
                                            vertical_flip=True)
-        test_args = dict(rescale=1. / 255)
-        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir), self.training_metadata, self.training_classes, self.batch_size, tv_args, False)
-        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_metadata, self.val_classes, self.batch_size, tv_args, False)
-        self.test_generator = self.custom_generator(self.absoluteFilePaths(test_data_dir), self.test_metadata, self.test_classes, self.batch_size, test_args, True)
-        self.class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
+        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir), self.training_metadata, self.training_classes, self.batch_size, tv_args)
+        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_metadata, self.val_classes, self.batch_size, tv_args)
         self.test_images_list = self.absoluteFilePaths(test_data_dir)
-        # self.train_generator.classes.dump("./classes/training_classes.npy")
-        # self.validation_generator.classes.dump("./classes/val_classes.npy")
-        # self.test_generator.classes.dump("./classes/test_classes.npy")
 
+    """
+    Train the class's model object using the train and validation generators
+    """
     def train(self):
-
-        # top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
+        # Create callbacks for use during training. Checkpoint on val AUC improvement and early stop after 5 epochs
+        # of no improvement. Also defines saving tensorboards and logging training to CSV
         callbacks_list = [
-            ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
-            EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
-            CSVLogger(self.model_path+'/log.csv', append=True, separator=';'),
-            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size/4))
+            ModelCheckpoint(
+                self.top_weights_path,
+                monitor="val_auc",
+                verbose=1,
+                save_best_only=True,
+                mode="max",
+            ),
+            EarlyStopping(
+                monitor="val_auc",
+                patience=5,
+                verbose=0,
+                restore_best_weights=True,
+                mode="max",
+            ),
+            CSVLogger(self.model_path + "/log.csv", append=True, separator=";"),
+            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size / 4)),
         ]
-        class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
-        # Train Simple CNN
-        self.model.fit_generator(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch,
-                  callbacks=callbacks_list,
-                  class_weight=class_weights, steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size), validation_steps=math.ceil(len(self.val_classes)/self.batch_size))
-        self.model.save(self.model_path+"/"+self.name)
+        # Calculate class weights for balancing
+        class_weights = dict(
+            enumerate(
+                class_weight.compute_class_weight(
+                    "balanced",
+                    classes=np.unique(self.training_classes),
+                    y=self.training_classes,
+                )
+            )
+        )
+        # Train the model and save
+        self.model.fit(
+            self.train_generator,
+            validation_data=self.validation_generator,
+            epochs=self.nb_epoch,
+            callbacks=callbacks_list,
+            class_weight=class_weights,
+            steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size),
+            validation_steps=math.ceil(len(self.val_classes)/self.batch_size)
+        )
+        self.model.save(self.model_path + "/" + self.name)
 
-    def test(self):
-        Y_pred = self.model.predict(self.test_generator, self.test_generator.samples // self.batch_size + 1)
-        y_pred = np.argmax(Y_pred, axis=1)
-        print('Confusion Matrix')
-        print(confusion_matrix(self.test_generator.classes, y_pred))
-        print('Classification Report')
-        target_names = ['B', 'M', 'N']
-        print(classification_report(self.test_generator.classes, y_pred, target_names=target_names))
-
+    """
+    Return the predictions made on the test data
+    """
     def test_predict(self):
         datagen = ImageDataGenerator()
         preds = None
         data_gen_args = dict(rescale=1. / 255)
+        # Iterate through test data
         for i in range(len(self.test_classes)):
             print(str(i)+"/"+str(len(self.test_classes)))
+            # Load image
             image_path = self.test_images_list[i]
             image = load_img(image_path, target_size=(self.img_height, self.img_width))
             image = datagen.apply_transform(image, data_gen_args)
             image = img_to_array(image)
+            # Add the model predictions on the image and metadata to an array
             if preds is None:
                 preds = self.model.predict([np.array([image]), np.array(self.test_metadata.loc[i].drop('label')).astype('float32').reshape(1,-1)])
             else:
                 preds = np.append(preds, self.model.predict([np.array([image]), np.array(self.test_metadata.loc[i].drop('label')).astype('float32').reshape(1,-1)]), axis=0)
 
         return preds
-        # return self.model.predict(self.train_generator, steps=math.ceil(len(self.test_classes)/self.batch_size), verbose=1).round()[:len(self.test_classes)]
 
-    def save_preds(self, tuning):
 
-        train_datagen = ImageDataGenerator(rescale=1. / 255
-                                           )
-
-        validation_datagen = ImageDataGenerator(rescale=1. / 255
-                                                )
-
-        test_datagen = ImageDataGenerator(rescale=1. / 255)
-        train_generator = train_datagen.flow_from_directory(self.train_data_dir,
-                                                            target_size=(self.img_width, self.img_height),
-                                                            batch_size=self.batch_size,
-                                                            class_mode='categorical'
-                                                            ,shuffle=False
-                                                            )
-
-        validation_generator = validation_datagen.flow_from_directory(self.validation_data_dir,
-                                                                      target_size=(self.img_width, self.img_height),
-                                                                      batch_size=self.batch_size,
-                                                                      class_mode='categorical'
-                                                                      ,shuffle=False
-                                                                      )
-
-        test_generator = test_datagen.flow_from_directory(self.test_data_dir,
-                                                          target_size=(self.img_width, self.img_height),
-                                                          batch_size=self.batch_size,
-                                                          class_mode='categorical',shuffle=False)
-        os.makedirs(os.path.join(self.model_path,"training_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"validation_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"test_preds"), exist_ok=True)
-        pred_probas = self.model.predict(train_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"training_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(validation_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"validation_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(test_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"test_preds",self.name+tuning), pred_probas)
-
+"""
+This class is a combination of the previous two, combining model predictions and metadata with a base model
+"""
 class Metadata_ensemble():
 
     def __init__(self, model_name = None, transformation_ratio = .05, trainable_base_layers = 0, resolution = 400, seed = 4099, members = None,
-                 preds_dir = "ensemble_members", model_dir = "mixed_data_ensembles", concat_metadata = False, metadata_prefix = ""):
+                 preds_dir = "ensemble_members", model_dir = "mixed_data_ensembles", metadata_prefix = ""):
         self.preds_dir = preds_dir
         # hyper parameters for model
         self.nb_classes = 2  # number of classes
-        self.based_model_last_block_layer_number = 126  # value is based on based model selected.
-        self.img_width, self.img_height = resolution, resolution  # change based on the shape/structure of your images
-        self.batch_size = 4  # try 4, 8, 16, 32, 64, 128, 256 dependent on CPU/GPU memory capacity (powers of 2 values).
-        self.nb_epoch = 50  # number of iteration the algorithm gets trained.
-        self.learn_rate = 1e-4  # sgd learning rate
-        self.momentum = .9  # sgd momentum to avoid local minimum
+        # The number of pre trained layers in the base model (always an xception model)
+        self.based_model_last_block_layer_number = 126
+        # Resolution of iamges for training
+        self.img_width, self.img_height = resolution, resolution
+        # Adjusted based on image resolution and model complexity
+        self.batch_size = 8
+        # Maximum number of epochs
+        self.nb_epoch = 50
+        # How much images are transformed before being fed to the model
         self.transformation_ratio = transformation_ratio
+        # How many of the last pre trained layers can have weights adjusted
         self.trainable_base_layers = trainable_base_layers
+        # Allows for repeatability of results
         self.seed = seed
+        # Used for fetching correct metadata
         self.metadata_prefix = metadata_prefix
-        self.concat_metadata = concat_metadata
+        # Number of members in the ensemble
         self.members = members
         if model_name is None:
             self.name = datetime.datetime.now().strftime('%d-%m-%y')
@@ -663,7 +558,7 @@ class Metadata_ensemble():
         self.model_path = os.path.join(os.getcwd(),".", model_dir, self.name)
 
         os.makedirs(self.model_path, exist_ok=True)
-        # self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
+        # Where the model weights that achieve highest val AUC are stored
         self.top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
         self.final_weights_path = os.path.join(os.path.abspath(self.model_path), 'model_weights.h5')
         self.tensorboard_path = os.path.join(os.path.abspath(self.model_path), 'tensorboard')
@@ -672,11 +567,13 @@ class Metadata_ensemble():
         random.seed(seed)
         np.random.seed(seed)
         tf.random.set_seed(seed)
+        # Counter for loading predictions
         self.i=0
 
-
+    """
+    Store the model's hyper parameters
+    """
     def save_hyper_parameters(self):
-        # f = open(self.model_path+"/hyper_parameters.txt", 'w')
         f = open(os.path.join(self.model_path, "hyper_parameters.txt"), 'w')
         f.write("based_model_last_block_layer_number: "+str(self.based_model_last_block_layer_number)+"\n")
         f.write("img_width: " + str(self.img_width)+"\n")
@@ -688,101 +585,81 @@ class Metadata_ensemble():
         f.write("transformation_ratio: " + str(self.transformation_ratio))
         f.close()
 
-    def make_model(self, load=False, extra_block=False):
-        # if load:
-        #     self.model = load_model(os.path.join(os.path.abspath(self.model_path), self.name))
-        #     return
-        # Pre-Trained CNN Model using imagenet dataset for pre-trained weights
+    def make_model(self, load=False):
+        # Load the pre trained xception model from keras
         base_model = Xception(input_shape=(self.img_width, self.img_height, 3), weights='imagenet', include_top=False)
-        if extra_block:
-            # Top Model Block
-            x = base_model.output
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Conv2D(32, (3, 3))(x)
-            x = Activation('relu')(x)
-            x = MaxPooling2D(pool_size=(2, 2))(x)
-            # x = Conv2D(64, (3, 3))(x)
-            # x = Activation('relu')(x)
-            # x = MaxPooling2D(pool_size=(2, 2))(x)
-            x = Flatten()(x)
-            x = Dense(64)(x)
-            x = Activation('relu')(x)
-            x = Dropout(0.5)(x)
-            x = GlobalAveragePooling2D()(x)
-        else:
-            x = base_model.output
-            x = GlobalAveragePooling2D()(x)
-
-        predictions = Dense(self.nb_classes, activation='softmax')(x)
-
-        # add your top layer block to your base model
+        x = base_model.output
+        # Create the final pooling and prediction layers
+        x = GlobalAveragePooling2D()(x)
+        predictions = Dense(self.nb_classes, activation="softmax")(x)
+        # Add pooling and predictions to base model
         x = Model(base_model.input, predictions)
-
+        # Set the required number of base layers to untrainable
+        for layer in base_model.layers[:self.based_model_last_block_layer_number - self.trainable_base_layers]:
+            layer.trainable = False
         metadata = Sequential()
+        # If there are more than 20 metadata features add extra layers on top of metadata before
+        # combining with base model
         if self.training_metadata.shape[1] > 20:
             metadata.add(Dense(50, input_dim=self.training_metadata.shape[1] - 1, activation='relu'))
             metadata.add(Dense(25, input_dim=10, activation='relu'))
             metadata.add(Dense(5, input_dim=10, activation='relu'))
         else:
             metadata.add(Dense(5, input_dim=self.training_metadata.shape[1] - 1, activation='relu'))
+        # Add the prediction layer to the layers on top of metadata
         metadata.add(Dense(self.nb_classes, activation='sigmoid'))
-
+        # Define the input for receiving member predictions
         preds = Input(shape=(self.members, ))
-
-        # combined = concatenate([x.output, y.output])
+        # Concatenate base model output with feed forward layer on top of metadata output and member predictions
         combined = concatenate([x.output, preds,metadata.output])
+        # Add dense layers to learn from the outputs of the new CNN and member models
         z = Dense(10, activation="relu")(combined)
         z = Dense(5, activation="relu")(z)
         z = Dense(self.nb_classes, activation="softmax")(z)
+        # Create the model with the input to the new CNN, member predictions, and metadata as inputs
         model = Model(inputs=[x.input, preds, metadata.input], outputs=z)
         model.compile(optimizer='nadam',
                       loss='binary_crossentropy',  # categorical_crossentropy if multi-class classifier
                       metrics=['accuracy', keras.metrics.AUC(name='auc')])
+        # If using a trained model restore weights
         if load:
             model.load_weights(self.top_weights_path)
-            # model = load_model(os.path.join(self.model_path, self.name))
         self.model = model
 
-
-    def custom_generator(self, images_list, metadata, preds, classes, batch_size, data_gen_args, test):
-        # i = 0
+    """
+    A custom data generator to be used when training the model that generates batches of 
+    images, metadata, and member predictions made on the image
+    """
+    def custom_generator(self, images_list, metadata, preds, classes, batch_size, data_gen_args):
+        # Reset the counter
         self.i=0
         datagen = ImageDataGenerator()
         indexes = list(range(0, len(images_list)))
-        if not test:
-            random.shuffle(indexes)
+        random.shuffle(indexes)
+        # While true is used for data generators
         while True:
             batch = {'images': [], 'preds': [], 'metadata': [],  'labels': []}
             for b in range(batch_size):
-                try:
-                    if self.i == len(images_list):
-                        self.i = 0
-                        if not test:
-                            random.shuffle(indexes)
-                    # Read image from list and convert to array
-                    image_path = images_list[indexes[self.i]]
-                    image = load_img(image_path, target_size=(self.img_height, self.img_width))
-                    image = datagen.apply_transform(image, data_gen_args)
-                    image = img_to_array(image)
-
-                    # Read data from csv using the name of current image
-                    yield_preds = preds[indexes[self.i], :]
-                    yield_metadata = np.array(metadata.loc[indexes[self.i]].drop('label'))
-                    label = classes[indexes[self.i]]
-                    batch['images'].append(image)
-                    batch['preds'].append(yield_preds)
-                    batch['metadata'].append(yield_metadata)
-                    batch['labels'].append(label)
-                    self.i += 1
-                except:
-                    print("i: "+ str(self.i)+" image list length: "+ str(len(images_list)))
-                    print(indexes)
-                    random.shuffle(indexes)
+                # If the end of the image list is reached reset counter and shuffle indexes
+                if self.i == len(images_list):
                     self.i = 0
-                    b=b-1
-
+                    random.shuffle(indexes)
+                # Load image at selected index and apply transformations
+                image_path = images_list[indexes[self.i]]
+                image = load_img(image_path, target_size=(self.img_height, self.img_width))
+                image = datagen.apply_transform(image, data_gen_args)
+                image = img_to_array(image)
+                # Get the prediction and label at the selected index
+                yield_preds = preds[indexes[self.i], :]
+                # Get the metadata and label at the selected index
+                yield_metadata = np.array(metadata.loc[indexes[self.i]].drop('label'))
+                label = classes[indexes[self.i]]
+                batch['images'].append(image)
+                batch['preds'].append(yield_preds)
+                batch['metadata'].append(yield_metadata)
+                batch['labels'].append(label)
+                self.i += 1
+            # Format batch for being fed to model
             batch['images'] = np.array(batch['images'])
             batch['preds'] = np.array(batch['preds'])
             batch['metadata'] = np.array(batch['metadata'])
@@ -790,8 +667,8 @@ class Metadata_ensemble():
             batch['labels'] = np.eye(self.nb_classes)[batch['labels']]
             yield [batch['images'], batch['preds'], batch['metadata']], batch['labels']
 
+    # Load either train, validation, or test predictions for each member
     def load_preds(self, models, mode):
-
         if self.members is None:
             self.members = len(models)
         labels = []
@@ -799,15 +676,13 @@ class Metadata_ensemble():
             m = models[i]
             pred_probas = np.load(os.path.join(os.getcwd(), ".", self.preds_dir, mode + "_preds/", m))
             predicts = pred_probas[:, 1]
-            # np.save("./preds/model_"+str(i+1)+"_preds", pred_probas)
             labels.append(predicts)
             i += 1
-
-        # Ensemble with voting
         labels = np.array(labels)
         labels = np.transpose(labels, (1, 0))
         return labels
 
+    # Get the absolute file paths of all files in a directory
     def absoluteFilePaths(self, directory):
         files = []
         for dirpath, _, filenames in os.walk(directory):
@@ -816,6 +691,7 @@ class Metadata_ensemble():
         return files
 
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir):
+        # Load member predictions, metadata, and training, test, and validation data classes
         self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
         self.training_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"training_metadata.csv"))
         self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
@@ -825,7 +701,7 @@ class Metadata_ensemble():
         self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
         self.test_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"test_metadata.csv"))
         self.test_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "test_classes.npy"), allow_pickle=True)
-
+        # Train and validation generators use transformations
         tv_args = dict(rescale=1. / 255,
                                            rotation_range=self.transformation_ratio,
                                            shear_range=self.transformation_ratio,
@@ -833,132 +709,75 @@ class Metadata_ensemble():
                                            cval=self.transformation_ratio,
                                            horizontal_flip=True,
                                            vertical_flip=True)
-        test_args = dict(rescale=1. / 255)
-        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir),self.training_metadata, self.training_preds, self.training_classes, self.batch_size, tv_args, False)
-        print("image list length: "+str(len(self.absoluteFilePaths(train_data_dir)))+"preds shape: "+str(self.training_preds.shape[0])+" classes: "+str(len(self.training_classes)))
-        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_metadata, self.val_preds, self.val_classes, self.batch_size, tv_args, False)
-        print("image list length: "+str(len(self.absoluteFilePaths(validation_data_dir)))+"preds shape: "+str(self.val_preds.shape[0])+" classes: "+str(len(self.val_classes)))
-        self.test_generator = self.custom_generator(self.absoluteFilePaths(test_data_dir),self.test_metadata, self.test_preds, self.test_classes, self.batch_size, test_args, True)
-        print("image list length: "+str(len(self.absoluteFilePaths(test_data_dir)))+"preds shape: "+str(self.test_preds.shape[0])+" classes: "+str(len(self.test_classes)))
-        self.class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
+        self.train_generator = self.custom_generator(self.absoluteFilePaths(train_data_dir),self.training_metadata, self.training_preds, self.training_classes, self.batch_size, tv_args)
+        self.validation_generator = self.custom_generator(self.absoluteFilePaths(validation_data_dir), self.val_metadata, self.val_preds, self.val_classes, self.batch_size, tv_args)
         self.test_images_list = self.absoluteFilePaths(test_data_dir)
 
+    """
+    Train the class's model object using the train and validation generators
+    """
     def train(self):
-
-        # top_weights_path = os.path.join(os.path.abspath(self.model_path), 'top_model_weights.h5')
+        # Create callbacks for use during training. Checkpoint on val AUC improvement and early stop after 5 epochs
+        # of no improvement. Also defines saving tensorboards and logging training to CSV
         callbacks_list = [
-            ModelCheckpoint(self.top_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
-            EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
-            CSVLogger(self.model_path+'/log.csv', append=True, separator=';'),
-            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size/4))
+            ModelCheckpoint(
+                self.top_weights_path,
+                monitor="val_auc",
+                verbose=1,
+                save_best_only=True,
+                mode="max",
+            ),
+            EarlyStopping(
+                monitor="val_auc",
+                patience=5,
+                verbose=0,
+                restore_best_weights=True,
+                mode="max",
+            ),
+            CSVLogger(self.model_path + "/log.csv", append=True, separator=";"),
+            TensorBoard(self.tensorboard_path, update_freq=int(self.batch_size / 4)),
         ]
-        class_weights = dict(enumerate(class_weight.compute_class_weight('balanced',
-                                                                         classes=np.unique(
-                                                                             self.training_classes),
-                                                                         y=self.training_classes)))
-        # Train Simple CNN
-        self.model.fit_generator(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch,
-                  callbacks=callbacks_list,
-                  class_weight=class_weights, steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size), validation_steps=math.ceil(len(self.val_classes)/self.batch_size))
-        self.model.save(self.model_path+"/"+self.name)
+        # Calculate class weights for balancing
+        class_weights = dict(
+            enumerate(
+                class_weight.compute_class_weight(
+                    "balanced",
+                    classes=np.unique(self.training_classes),
+                    y=self.training_classes,
+                )
+            )
+        )
+        # Train the model and save
+        self.model.fit(
+            self.train_generator,
+            validation_data=self.validation_generator,
+            epochs=self.nb_epoch,
+            callbacks=callbacks_list,
+            class_weight=class_weights,
+            steps_per_epoch=math.ceil(len(self.training_classes)/self.batch_size),
+            validation_steps=math.ceil(len(self.val_classes)/self.batch_size)
+        )
+        self.model.save(self.model_path + "/" + self.name)
 
-    def tune(self):
-        self.model.load_weights(self.top_weights_path)
-
-        # based_model_last_block_layer_number points to the layer in your model you want to train.
-        # For example if you want to train the last block of a 19 layer VGG16 model this should be 15
-        # If you want to train the last Two blocks of an Inception model it should be 172
-        # layers before this number will used the pre-trained weights, layers above and including this number
-        # will be re-trained based on the new data.
-        for layer in self.model.layers[:self.based_model_last_block_layer_number]:
-            layer.trainable = False
-        for layer in self.model.layers[self.based_model_last_block_layer_number:]:
-            layer.trainable = True
-
-        # compile the model with a SGD/momentum optimizer
-        # and a very slow learning rate.
-        # self.model.compile(optimizer='nadam',
-        #               loss='categorical_crossentropy',
-        #               metrics=['accuracy'])
-
-        callbacks_list = [
-            ModelCheckpoint(self.final_weights_path, monitor='val_auc', verbose=1, save_best_only=True, mode="max"),
-            EarlyStopping(monitor='val_auc', patience=5, verbose=0, restore_best_weights=True, mode="max"),
-            CSVLogger(self.model_path + '/tuning_log.csv', append=True, separator=';')
-        ]
-
-        # fine-tune the model
-        self.model.fit(self.train_generator, validation_data=self.validation_generator, epochs=self.nb_epoch, callbacks=callbacks_list,
-                  class_weight=self.class_weights)
-        self.model.save(self.model_path+"/"+self.name+"_tuned")
-
-    def test(self):
-        Y_pred = self.model.predict(self.test_generator, self.test_generator.samples // self.batch_size + 1)
-        y_pred = np.argmax(Y_pred, axis=1)
-        print('Confusion Matrix')
-        print(confusion_matrix(self.test_generator.classes, y_pred))
-        print('Classification Report')
-        target_names = ['B', 'M', 'N']
-        print(classification_report(self.test_generator.classes, y_pred, target_names=target_names))
-
+    """
+    Return the predictions made on the test data
+    """
     def test_predict(self):
         datagen = ImageDataGenerator()
         preds = None
         data_gen_args = dict(rescale=1. / 255)
+        # Iterate through test data
         for i in range(len(self.test_classes)):
             print(str(i)+"/"+str(len(self.test_classes)))
+            # Load image
             image_path = self.test_images_list[i]
             image = load_img(image_path, target_size=(self.img_height, self.img_width))
             image = datagen.apply_transform(image, data_gen_args)
             image = img_to_array(image)
+            # Add the model predictions on the image, metadata and test data predictions to an array
             if preds is None:
                 preds = self.model.predict([np.array([image]), np.array([self.test_preds[i, :]]), np.array(self.test_metadata.loc[i].drop('label')).astype('float32').reshape(1,-1)])
             else:
                 preds = np.append(preds, self.model.predict([np.array([image]), np.array([self.test_preds[i, :]]),
                                                             np.array(self.test_metadata.loc[i].drop('label')).astype('float32').reshape(1,-1)]), axis=0)
-
         return preds
-        # return self.model.predict(self.train_generator, steps=math.ceil(len(self.test_classes)/self.batch_size), verbose=1).round()[:len(self.test_classes)]
-
-    def save_preds(self, tuning):
-
-        train_datagen = ImageDataGenerator(rescale=1. / 255
-                                           )
-
-        validation_datagen = ImageDataGenerator(rescale=1. / 255
-                                                )
-
-        test_datagen = ImageDataGenerator(rescale=1. / 255)
-        train_generator = train_datagen.flow_from_directory(self.train_data_dir,
-                                                            target_size=(self.img_width, self.img_height),
-                                                            batch_size=self.batch_size,
-                                                            class_mode='categorical'
-                                                            ,shuffle=False
-                                                            )
-
-        validation_generator = validation_datagen.flow_from_directory(self.validation_data_dir,
-                                                                      target_size=(self.img_width, self.img_height),
-                                                                      batch_size=self.batch_size,
-                                                                      class_mode='categorical'
-                                                                      ,shuffle=False
-                                                                      )
-
-        test_generator = test_datagen.flow_from_directory(self.test_data_dir,
-                                                          target_size=(self.img_width, self.img_height),
-                                                          batch_size=self.batch_size,
-                                                          class_mode='categorical',shuffle=False)
-        os.makedirs(os.path.join(self.model_path,"training_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"validation_preds"), exist_ok=True)
-        os.makedirs(os.path.join(self.model_path,"test_preds"), exist_ok=True)
-        pred_probas = self.model.predict(train_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"training_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(validation_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"validation_preds",self.name+tuning), pred_probas)
-        pred_probas = self.model.predict(test_generator)
-        predicts = np.argmax(pred_probas, axis=1)
-        np.save(os.path.join(self.model_path,"test_preds",self.name+tuning), pred_probas)

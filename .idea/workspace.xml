@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="refactor">
-      <change afterPath="$PROJECT_DIR$/models/metadata_nn.py" afterDir="false" />
+    <list default="true" id="81411f09-d1d3-4932-96fa-11813e1b91e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mias.csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/models/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/base_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/expert_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/expert_ensemble.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/ff_ensemble.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/ff_ensemble.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/metadata_nn.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/metadata_nn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/mixed_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mixed_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mixed_ff.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mixed_ff.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mixed_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mixed_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/ResNet152v2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/average_ensemble.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/inception_resnet_v2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/inceptionv3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/lr_ensemble.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/mobilenetv2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/nn_ensemble.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/vgg16.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/voting_ensemble.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/old_model_classes/xception.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/mixed_ff.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/mixed_model.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/preprocessing/ddsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/preprocessing/ddsm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/preprocessing/mias.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,12 +26,77 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/expert_ensemble.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="20">
+              <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="255">
+              <caret line="13" column="41" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#2220#2995#0" />
+                <element signature="e#3031#3739#0" />
+                <element signature="e#3780#4522#0" />
+                <element signature="e#4560#4904#0" />
+                <element signature="e#4943#5278#0" />
+                <element signature="e#5312#5723#0" />
+                <element signature="e#5757#6178#0" />
+                <element signature="e#6213#7205#0" />
+                <element signature="e#7241#8261#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mass_case_description_test_set.csv">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="580">
+              <caret line="29" column="104" selection-start-line="29" selection-start-column="104" selection-end-line="29" selection-end-column="104" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/ff_ensemble.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/metadata_nn.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-585">
+              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/models/base_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="235">
+              <caret line="177" column="8" selection-start-line="177" selection-start-column="8" selection-end-line="177" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,51 +105,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/mixed_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="22" selection-start-line="22" selection-end-line="22" selection-end-column="46" />
+            <state relative-caret-position="259">
+              <caret line="276" column="72" selection-start-line="276" selection-start-column="53" selection-end-line="276" selection-end-column="72" />
               <folding>
-                <element signature="e#958#18705#0" />
-                <element signature="e#18730#35669#0" />
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#1044#12977#0" />
+                <element signature="e#26407#40295#0" />
+                <element signature="e#29491#31940#0" />
+                <element signature="e#32457#34100#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/heterogeneous_diverse_model_ensembles_results.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/xception_heterogeneous_results.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="34" lean-forward="true" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/metadata_nn.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="28" column="94" selection-start-line="28" selection-start-column="94" selection-end-line="28" selection-end-column="94" />
-              <folding>
-                <element signature="e#65#92#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/ff_ensemble.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="73" selection-start-line="73" selection-end-line="73" />
             </state>
           </provider>
         </entry>
@@ -108,7 +130,6 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>ste</find>
-      <find>load_preds</find>
       <find>oh</find>
       <find>one</find>
       <find>sampl</find>
@@ -126,8 +147,16 @@
       <find>test_classes</find>
       <find>calc</find>
       <find>trainable_layers_</find>
-      <find>\n</find>
+      <find>test_generator</find>
+      <find>load_preds</find>
+      <find>test_metadata</find>
+      <find>final_weights_path</find>
+      <find>concat</find>
       <find>,</find>
+      <find>concat_metadata</find>
+      <find>ensemble_member_</find>
+      <find>\n</find>
+      <find>.fit</find>
     </findStrings>
     <replaceStrings>
       <replace>&amp;</replace>
@@ -136,8 +165,9 @@
       <replace />
       <replace>member</replace>
       <replace>\\\\\hline\n</replace>
+      <replace>same_level</replace>
+      <replace>same_level_metadata</replace>
       <replace>\\\\\\hline\n</replace>
-      <replace>&amp;</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -146,15 +176,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/log.csv" />
-        <option value="$PROJECT_DIR$/trained_models/mixed_test_2/results.txt" />
-        <option value="$PROJECT_DIR$/trained_models/mixed_test/log.csv" />
-        <option value="$PROJECT_DIR$/models/voting_ensemble.py" />
-        <option value="$PROJECT_DIR$/models/average_ensemble.py" />
-        <option value="$PROJECT_DIR$/models/lr_ensemble.py" />
-        <option value="$PROJECT_DIR$/models/nn_ensemble.py" />
-        <option value="$PROJECT_DIR$/ensemble_results.csv" />
-        <option value="$PROJECT_DIR$/models/ResNet152v2.py" />
         <option value="$PROJECT_DIR$/models/vgg16.py" />
         <option value="$PROJECT_DIR$/models/mobilenetv2.py" />
         <option value="$PROJECT_DIR$/models/inceptionv3.py" />
@@ -165,12 +186,10 @@
         <option value="$PROJECT_DIR$/models/mixed_nn.py" />
         <option value="$PROJECT_DIR$/ddsm_metadata.csv" />
         <option value="$PROJECT_DIR$/diverse_models.csv" />
-        <option value="$PROJECT_DIR$/models/expert_ensemble.py" />
         <option value="$PROJECT_DIR$/diverse_ensembles/mixed_data_diverse_members/log.csv" />
         <option value="$PROJECT_DIR$/gridsearch_ensemble_results.csv" />
         <option value="$PROJECT_DIR$/diverse_ensembles.csv" />
         <option value="$PROJECT_DIR$/parameter_gridsearch.csv" />
-        <option value="$PROJECT_DIR$/models/ff_ensemble.py" />
         <option value="$PROJECT_DIR$/member_val_ensemble_results.csv" />
         <option value="$PROJECT_DIR$/member_test_ensemble_results.csv" />
         <option value="$PROJECT_DIR$/gridsearch_val_ensemble_results.csv" />
@@ -181,7 +200,6 @@
         <option value="$PROJECT_DIR$/resolution_tests/xception_resolution_test.csv" />
         <option value="$PROJECT_DIR$/models/metadata_only.py" />
         <option value="$PROJECT_DIR$/gridsearch_ensemble_members.csv" />
-        <option value="$PROJECT_DIR$/preprocessing/ddsm.py" />
         <option value="$PROJECT_DIR$/ensemble_members.csv" />
         <option value="$PROJECT_DIR$/parameter_gridsearch_results.csv" />
         <option value="$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_metadata/log.csv" />
@@ -189,22 +207,34 @@
         <option value="$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_subtlety_metadata/log.csv" />
         <option value="$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_subtlety_concat_metadata/log.csv" />
         <option value="$PROJECT_DIR$/parameter_gridsearch_ensemble_results.csv" />
-        <option value="$PROJECT_DIR$/models/base_model.py" />
-        <option value="$PROJECT_DIR$/scripts.py" />
-        <option value="$PROJECT_DIR$/models/mixed_data.py" />
-        <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/models/metadata_nn.py" />
         <option value="$PROJECT_DIR$/heterogeneous_diverse_model_tests_results.csv" />
         <option value="$PROJECT_DIR$/xception_heterogeneous_members.csv" />
         <option value="$PROJECT_DIR$/xception_heterogeneous_results.csv" />
+        <option value="$PROJECT_DIR$/models/expert_ensemble.py" />
+        <option value="$PROJECT_DIR$/models/ff_ensemble.py" />
+        <option value="$PROJECT_DIR$/models/base_model.py" />
+        <option value="$PROJECT_DIR$/metadata_ensemble_search.csv" />
+        <option value="$PROJECT_DIR$/results/metadata_nn_results.csv" />
+        <option value="$PROJECT_DIR$/results/metadata_search_results.csv" />
+        <option value="$PROJECT_DIR$/calc_ensemble_members.csv" />
+        <option value="$PROJECT_DIR$/mass_ensemble_members.csv" />
+        <option value="$PROJECT_DIR$/val_calc_results.txt" />
+        <option value="$PROJECT_DIR$/calc_ensemble/val_calc_results.txt" />
+        <option value="$PROJECT_DIR$/models/metadata_nn.py" />
+        <option value="$PROJECT_DIR$/models/mixed_data.py" />
+        <option value="$PROJECT_DIR$/models/radiologist.py" />
+        <option value="$PROJECT_DIR$/preprocessing/ddsm.py" />
+        <option value="$PROJECT_DIR$/scripts.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/README" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-1928" />
+    <option name="y" value="40" />
     <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -222,39 +252,7 @@
             <path>
               <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="diverse_model_tests" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="diverse_model_tests" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="inceptionV3" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="metadata_nn" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="metadata_nn" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="metadata_nn_deeper" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="metadata_search" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="CS4099" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="preprocessing" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -268,19 +266,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\CS4099\results" />
+      <recent name="E:\CS4099\old models 2" />
+      <recent name="E:\CS4099\old models" />
+      <recent name="E:\CS4099\diverse_ensembles" />
+      <recent name="E:\CS4099\models\old_model_classes" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\CS4099\models" />
       <recent name="E:\CS4099\ensemble_members" />
       <recent name="E:\CS4099\models\test_preds" />
       <recent name="E:\CS4099\resolution_gridsearch\750" />
       <recent name="E:\CS4099" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\CS4099\old models 2" />
-      <recent name="E:\CS4099\old models" />
-      <recent name="E:\CS4099\diverse_ensembles" />
-      <recent name="E:\CS4099\models\old_model_classes" />
-      <recent name="E:\CS4099\models" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -577,7 +575,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613410099228</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Commit before refactor">
+      <created>1616747782355</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1616747782355</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView">
@@ -597,8 +602,8 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.30227518" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32917964" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.32502708" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3163597" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -655,7 +660,8 @@
     <MESSAGE value="diverse models and working multi model" />
     <MESSAGE value="more efficient multi model" />
     <MESSAGE value="refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
+    <MESSAGE value="Commit before refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit before refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -681,11 +687,6 @@
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>31</line>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/old_model_classes/lr_ensemble.py</url>
           <line>84</line>
           <option name="timeStamp" value="90" />
@@ -706,18 +707,13 @@
           <option name="timeStamp" value="122" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/scripts.py</url>
-          <line>96</line>
-          <option name="timeStamp" value="125" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/old_model_classes/xception.py</url>
           <line>235</line>
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/scripts.py</url>
-          <line>39</line>
+          <line>43</line>
           <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -726,103 +722,68 @@
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="139" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/scripts.py</url>
-          <line>52</line>
+          <line>56</line>
           <option name="timeStamp" value="151" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/scripts.py</url>
-          <line>68</line>
+          <line>72</line>
           <option name="timeStamp" value="152" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>212</line>
+          <line>242</line>
           <option name="timeStamp" value="153" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/scripts.py</url>
-          <line>38</line>
+          <line>42</line>
           <option name="timeStamp" value="155" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>496</line>
-          <option name="timeStamp" value="169" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="181" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="182" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/metadata_nn.py</url>
-          <line>74</line>
-          <option name="timeStamp" value="184" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>594</line>
+          <line>520</line>
           <option name="timeStamp" value="185" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>128</line>
+          <line>145</line>
           <option name="timeStamp" value="188" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>242</line>
+          <line>281</line>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>486</line>
-          <option name="timeStamp" value="198" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/metadata_nn.py</url>
-          <line>25</line>
+          <line>28</line>
           <option name="timeStamp" value="202" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/preprocessing/ddsm.py</url>
-          <line>159</line>
+          <line>181</line>
           <option name="timeStamp" value="203" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>590</line>
+          <line>516</line>
           <option name="timeStamp" value="205" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>440</line>
+          <line>367</line>
           <option name="timeStamp" value="207" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>437</line>
+          <line>363</line>
           <option name="timeStamp" value="208" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>157</line>
-          <option name="timeStamp" value="209" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/mixed_data.py</url>
-          <line>919</line>
+          <line>780</line>
           <option name="timeStamp" value="213" />
         </line-breakpoint>
       </breakpoints>
@@ -881,170 +842,168 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/diverse_models.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/diverse_model_tests/xception/results.txt">
+    <entry file="file://$PROJECT_DIR$/preprocessing/mass_test_metadata.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/xception_transformation_resolution_members.csv" />
-    <entry file="file://$PROJECT_DIR$/xception_transformation_members.csv" />
-    <entry file="file://$PROJECT_DIR$/parameter_gridsearch.csv" />
-    <entry file="file://$PROJECT_DIR$/mixed_data_xception_transformation_ensembles.csv" />
-    <entry file="file://$PROJECT_DIR$/ensemble_members.csv">
+    <entry file="file://$PROJECT_DIR$/../Users/Sam/Anaconda3/envs/iq-py-playground/Lib/site-packages/pandas/core/indexes/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="210">
+          <caret line="4374" selection-start-line="4374" selection-end-line="4374" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parameter_gridsearch_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="57" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_concat_metadata/results.txt">
+    <entry file="file://$PROJECT_DIR$/preprocessing/unprocessed_test_mass_metadata.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_all_metadata/log.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_subtlety_metadata/log.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" column="116" selection-start-line="7" selection-start-column="116" selection-end-line="7" selection-end-column="116" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_subtlety_concat_metadata/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_metadata/log.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" column="108" selection-start-line="7" selection-start-column="108" selection-end-line="7" selection-end-column="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_subtlety_concat_metadata/log.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_assessment_concat_metadata/log.csv">
+    <entry file="file://$PROJECT_DIR$/calc_ensemble_members.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
+          <caret line="1" selection-start-line="1" selection-end-line="5" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_all_concat_metadata/log.csv">
+    <entry file="file://$PROJECT_DIR$/preprocessing/unprocessed_val_mass_metadata.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/parameter_gridsearch_lr_ensembles/lr_3_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/metadata_ff_mass/log.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_lr_ensembles/lr_3_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/val_calc_ensemble_results.txt" />
+    <entry file="file://$PROJECT_DIR$/val_mass_ensemble_results.txt" />
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/results.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_lr_ensembles/lr_5_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/calc_ensemble/val_calc_results.txt" />
+    <entry file="file://$PROJECT_DIR$/calc_ensemble/val_calc_ensemble_results.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_lr_ensembles/lr_7_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/mass_ensemble/val_mass_ensemble_results.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="13" column="85" lean-forward="true" selection-start-line="13" selection-start-column="85" selection-end-line="13" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/val_mass_results.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_lr_ensembles/lr_9_members/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/diverse_model_ensembles/mixed_data_5_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/val_calc_results.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_nn_ensembles/nn_3_members/results.txt">
+    <entry file="file://$PROJECT_DIR$/test_calc_results.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="13" column="89" lean-forward="true" selection-start-line="13" selection-start-column="89" selection-end-line="13" selection-end-column="90" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_mass_results.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_nn.csv" />
-    <entry file="file://$PROJECT_DIR$/metadata_nn_results.csv">
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/log.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search.csv" />
-    <entry file="file://$PROJECT_DIR$/metadata_search_results.csv">
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_metadata/mass_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_all_features/mass_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/mass_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/test_massresults.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/test_calcresults.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/val_mass_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/val_calc_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/test_mass_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metadata_ensemble_search/metadata_ensemble_test_no_assessment_subtlety_metadata/test_calc_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/metadata_ff_mass/val_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/metadata_ff_calc/val_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/val_massresults.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trained_models_and_ensembles/metadata_nn/metadata_nn_deeper/val_calcresults.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="57" lean-forward="true" selection-start-line="3" selection-start-column="57" selection-end-line="3" selection-end-column="57" />
+        <state relative-caret-position="260">
+          <caret line="13" column="46" lean-forward="true" selection-start-line="13" selection-start-column="46" selection-end-line="13" selection-end-column="52" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/expert_ensemble.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-900" />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/mass_ensemble/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/starting_weights_ensemble_results.csv">
+    <entry file="file://$PROJECT_DIR$/calc_ensemble/results.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        <state relative-caret-position="260">
+          <caret line="13" column="85" selection-start-line="13" selection-start-column="85" selection-end-line="13" selection-end-column="91" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/parameter_gridsearch_ensemble_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/diverse_model_ensemble_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="26" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mixed_data_heterogenous_ensemble_results.csv">
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/calc_metadata_ensemble/results.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/mixed_model.py">
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/metadata_ff_mass/results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/radiologist.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1440">
-          <caret line="312" column="36" selection-start-line="312" selection-start-column="36" selection-end-line="312" selection-end-column="36" />
+        <state relative-caret-position="220">
+          <caret line="11" column="88" selection-start-line="11" selection-start-column="88" selection-end-line="11" selection-end-column="88" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_ensemble_test_no_radiologist_concat_metadata_fixed_model/log.csv" />
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_ensemble_test_no_radiologist_model/log.csv" />
-    <entry file="file://$PROJECT_DIR$/metadata_search/metadata_test_no_radiologist_concat_metadata_fixed_model/AUC.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Roaming/Python/Python37/site-packages/tensorflow/python/data/util/nest.py">
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/mass_metadata_ensemble/results.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1700">
-          <caret line="93" selection-start-line="93" selection-end-line="93" />
+        <state>
+          <caret column="16" selection-start-column="16" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts.py">
+    <entry file="file://$PROJECT_DIR$/radiologist_results.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/radiologist_mass_results.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1060">
-          <caret line="53" column="49" selection-start-line="53" selection-start-column="49" selection-end-line="53" selection-end-column="49" />
+        <state relative-caret-position="220">
+          <caret line="11" column="27" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/preprocessing/ddsm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1820">
+          <caret line="91" column="49" lean-forward="true" selection-start-line="91" selection-start-column="49" selection-end-line="91" selection-end-column="49" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -1053,96 +1012,102 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/base_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1060">
-          <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+        <state relative-caret-position="235">
+          <caret line="177" column="8" selection-start-line="177" selection-start-column="8" selection-end-line="177" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mass_ensemble_members.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" selection-start-line="1" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mass_case_description_test_set.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calc_mass_metadata/metadata_ff_calc/results.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1459">
+          <caret line="13" column="81" selection-start-line="13" selection-start-column="81" selection-end-line="13" selection-end-column="81" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/diverse_model_tests/inceptionV3/results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/diverse_model_tests/inceptionV3/hyper_parameters.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/preprocessing/ddsm.py">
+    <entry file="file://$PROJECT_DIR$/models/metadata_nn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3424">
-          <caret line="361" column="22" selection-start-line="361" selection-start-column="22" selection-end-line="361" selection-end-column="22" />
+        <state relative-caret-position="-585">
+          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/expert_ensemble.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="4" selection-start-line="4" selection-end-line="4" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="13" column="41" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#2220#2995#0" />
+            <element signature="e#3031#3739#0" />
+            <element signature="e#3780#4522#0" />
+            <element signature="e#4560#4904#0" />
+            <element signature="e#4943#5278#0" />
+            <element signature="e#5312#5723#0" />
+            <element signature="e#5757#6178#0" />
+            <element signature="e#6213#7205#0" />
+            <element signature="e#7241#8261#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/mixed_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="276" column="72" selection-start-line="276" selection-start-column="53" selection-end-line="276" selection-end-column="72" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1044#12977#0" />
+            <element signature="e#26407#40295#0" />
+            <element signature="e#29491#31940#0" />
+            <element signature="e#32457#34100#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/ff_ensemble.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="73" selection-start-line="73" selection-end-line="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="340">
+          <caret line="53" column="35" selection-start-line="53" selection-start-column="35" selection-end-line="53" selection-end-column="35" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/xception_heterogeneous_members.csv">
+    <entry file="file://$PROJECT_DIR$/README">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="1" column="42" selection-start-line="1" selection-start-column="42" selection-end-line="1" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/mixed_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="22" selection-start-line="22" selection-end-line="22" selection-end-column="46" />
-          <folding>
-            <element signature="e#958#18705#0" />
-            <element signature="e#18730#35669#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/heterogeneous_diverse_model_tests_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/metadata_nn/metadata_nn_deeper/mass_results.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/metadata_nn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="28" column="94" selection-start-line="28" selection-start-column="94" selection-end-line="28" selection-end-column="94" />
-          <folding>
-            <element signature="e#65#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/heterogeneous_diverse_model_ensembles_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="1" selection-start-line="1" selection-end-line="1" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xception_heterogeneous_results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="34" lean-forward="true" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+        <state relative-caret-position="580">
+          <caret line="29" column="104" selection-start-line="29" selection-start-column="104" selection-end-line="29" selection-end-column="104" />
         </state>
       </provider>
     </entry>
