@@ -182,7 +182,7 @@ class MixedData():
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir, classes = ""):
         # Load member predictions and training, test, and validation data classes
         self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
-        self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", classes+"training_classes.npy"), allow_pickle=True)
+        self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
         self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", "classes", classes+"val_classes.npy"), allow_pickle=True)
         self.test_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "test_preds")), "test")
@@ -434,7 +434,7 @@ class Metadata():
     def make_generators(self, train_data_dir, validation_data_dir, test_data_dir, classes=""):
         # Load metadata and training, test, and validation data classes
         self.training_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"training_metadata.csv"))
-        self.training_classes = np.load(os.path.join(os.getcwd(), ".", classes+"classes", "training_classes.npy"), allow_pickle=True)
+        self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
         self.val_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"val_metadata.csv"))
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", classes+"classes", "val_classes.npy"), allow_pickle=True)
         self.test_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"test_metadata.csv"))
@@ -694,7 +694,7 @@ class Metadata_ensemble():
         # Load member predictions, metadata, and training, test, and validation data classes
         self.training_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "training_preds")), "training")
         self.training_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"training_metadata.csv"))
-        self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", classes+"training_classes.npy"), allow_pickle=True)
+        self.training_classes = np.load(os.path.join(os.getcwd(), ".", "classes", "training_classes.npy"), allow_pickle=True)
         self.val_preds = self.load_preds(os.listdir(os.path.join(os.getcwd(), ".",self.preds_dir, "validation_preds")), "validation")
         self.val_metadata = pd.read_csv(os.path.join(os.getcwd(), ".", "preprocessing", self.metadata_prefix+"val_metadata.csv"))
         self.val_classes = np.load(os.path.join(os.getcwd(), ".", "classes.npy", classes+"val_classes.npy"), allow_pickle=True)
